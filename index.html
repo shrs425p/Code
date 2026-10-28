@@ -23,6 +23,12 @@ em,strong { color:#fff; }
 .copy-btn:hover,.copy-btn.done { background:#fff; color:#000; }
 .copy-exp-btn { background:#000; color:#fff; border:1px solid #fff; padding:4px 8px; margin-left:10px; font-size:12px; cursor:pointer; vertical-align:middle; }
 .copy-exp-btn:hover,.copy-exp-btn.done { background:#fff; color:#000; }
+.experiment-page { display:none; }
+.experiment-page.active { display:block; }
+.page-controls { display:flex; justify-content:space-between; gap:12px; border-top:1px solid #fff; padding-top:14px; margin-top:28px; }
+.page-btn { background:#000; color:#fff; border:1px solid #fff; padding:6px 12px; cursor:pointer; }
+.page-btn:hover:not(:disabled) { background:#fff; color:#000; }
+.page-btn:disabled { opacity:.45; cursor:default; }
 </style>
 </head>
 <body>
@@ -1413,6 +1419,88 @@ mlflow models serve \
 </code></pre>
 <p><em>Expected:</em> Response containing prediction <code>[0]</code> (Setosa).</p>
 <script>
+var experimentHeadings = Array.from(document.querySelectorAll('h1'));
+var body = document.body;
+var bodyChildren = Array.from(body.children);
+var pages = [];
+var pageContainer = document.createElement('main');
+pageContainer.id = 'experiment-pages';
+
+experimentHeadings.forEach(function (heading, index) {
+  var headingIndex = bodyChildren.indexOf(heading);
+  var startIndex = headingIndex;
+  var previous = bodyChildren[headingIndex - 1];
+  if (previous && previous.matches('p') && previous.querySelector('[id^="exp"]')) {
+    startIndex--;
+  }
+  var nextHeading = experimentHeadings[index + 1];
+  var endIndex = nextHeading ? bodyChildren.indexOf(nextHeading) : bodyChildren.length;
+  var page = document.createElement('section');
+  page.className = 'experiment-page';
+  page.dataset.page = String(index);
+  page.id = 'page-' + index;
+  var nodes = bodyChildren.slice(startIndex, endIndex);
+  if (index === 0) body.insertBefore(pageContainer, nodes[0]);
+  nodes.forEach(function (node) { page.appendChild(node); });
+  pages.push(page);
+});
+
+pages.forEach(function (page, index) {
+  var controls = document.createElement('nav');
+  controls.className = 'page-controls';
+  controls.setAttribute('aria-label', 'Experiment pages');
+
+  var previousButton = document.createElement('button');
+  previousButton.className = 'page-btn previous-page';
+  previousButton.type = 'button';
+  previousButton.textContent = 'Previous';
+  previousButton.disabled = index === 0;
+  previousButton.addEventListener('click', function () { showPage(index - 1); });
+
+  var nextButton = document.createElement('button');
+  nextButton.className = 'page-btn next-page';
+  nextButton.type = 'button';
+  nextButton.textContent = 'Next';
+  nextButton.disabled = index === pages.length - 1;
+  nextButton.addEventListener('click', function () { showPage(index + 1); });
+
+  controls.appendChild(previousButton);
+  controls.appendChild(nextButton);
+  page.appendChild(controls);
+  pageContainer.appendChild(page);
+});
+
+function showPage(index, updateHash) {
+  if (index < 0 || index >= pages.length) return;
+  pages.forEach(function (page, pageIndex) {
+    page.classList.toggle('active', pageIndex === index);
+  });
+  if (updateHash !== false) {
+    var anchor = pages[index].querySelector('[id^="exp"]');
+    if (anchor) history.replaceState(null, '', '#' + anchor.id);
+  }
+  window.scrollTo(0, 0);
+}
+
+function pageIndexForHash(hash) {
+  return pages.findIndex(function (page) {
+    return page.querySelector('#' + CSS.escape(hash.slice(1)));
+  });
+}
+
+document.querySelectorAll('a[href^="#exp"]').forEach(function (link) {
+  link.addEventListener('click', function (event) {
+    var index = pageIndexForHash(link.getAttribute('href'));
+    if (index !== -1) {
+      event.preventDefault();
+      showPage(index);
+    }
+  });
+});
+
+var initialPage = pageIndexForHash(window.location.hash);
+showPage(initialPage === -1 ? 0 : initialPage, false);
+
 document.querySelectorAll('pre').forEach(function (pre) {
   var btn = document.createElement('button');
   btn.className = 'copy-btn';
@@ -1438,29 +1526,17 @@ document.querySelectorAll('pre').forEach(function (pre) {
   pre.appendChild(btn);
 });
 
-var experimentHeadings = Array.from(document.querySelectorAll('h1'));
-experimentHeadings.forEach(function (heading, index) {
+experimentHeadings.forEach(function (heading) {
   var btn = document.createElement('button');
   btn.className = 'copy-exp-btn';
   btn.type = 'button';
   btn.textContent = 'Copy experiment';
   btn.addEventListener('click', function () {
-    var nextHeading = experimentHeadings[index + 1];
-    var parts = [];
-    var node = heading;
-
-    while (node && node !== nextHeading) {
-      if (!node.matches('.copy-exp-btn')) {
-        var clone = node.cloneNode(true);
-        clone.querySelectorAll('.copy-btn, .copy-exp-btn').forEach(function (copyButton) {
-          copyButton.remove();
-        });
-        if (clone.innerText.trim()) parts.push(clone.innerText.trim());
-      }
-      node = node.nextElementSibling;
-    }
-
-    var text = parts.join('\n\n');
+    var clone = heading.closest('.experiment-page').cloneNode(true);
+    clone.querySelectorAll('.page-controls, .copy-btn, .copy-exp-btn').forEach(function (button) {
+      button.remove();
+    });
+    var text = clone.innerText.trim();
     function ok() {
       btn.textContent = 'Copied!';
       btn.classList.add('done');
