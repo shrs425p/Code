@@ -1,5 +1,3 @@
----
-
 # Exp1 – Agile Software Project Lifecycle using Jira
 
 **Step 1:** Sign up for a free Jira account → Name your first project → keep all default selections.
