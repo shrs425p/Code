@@ -21,6 +21,8 @@ th { background:#000; }
 em,strong { color:#fff; }
 .copy-btn { position:absolute; top:8px; right:0; background:#000; color:#fff; border:0; padding:4px 0 4px 10px; font-size:12px; cursor:pointer; }
 .copy-btn:hover,.copy-btn.done { background:#fff; color:#000; }
+.copy-exp-btn { background:#000; color:#fff; border:1px solid #fff; padding:4px 8px; margin-left:10px; font-size:12px; cursor:pointer; vertical-align:middle; }
+.copy-exp-btn:hover,.copy-exp-btn.done { background:#fff; color:#000; }
 </style>
 </head>
 <body>
@@ -1434,6 +1436,51 @@ document.querySelectorAll('pre').forEach(function (pre) {
     } else { fallback(); }
   });
   pre.appendChild(btn);
+});
+
+var experimentHeadings = Array.from(document.querySelectorAll('h1'));
+experimentHeadings.forEach(function (heading, index) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-exp-btn';
+  btn.type = 'button';
+  btn.textContent = 'Copy experiment';
+  btn.addEventListener('click', function () {
+    var nextHeading = experimentHeadings[index + 1];
+    var parts = [];
+    var node = heading;
+
+    while (node && node !== nextHeading) {
+      if (!node.matches('.copy-exp-btn')) {
+        var clone = node.cloneNode(true);
+        clone.querySelectorAll('.copy-btn, .copy-exp-btn').forEach(function (copyButton) {
+          copyButton.remove();
+        });
+        if (clone.innerText.trim()) parts.push(clone.innerText.trim());
+      }
+      node = node.nextElementSibling;
+    }
+
+    var text = parts.join('\n\n');
+    function ok() {
+      btn.textContent = 'Copied!';
+      btn.classList.add('done');
+      setTimeout(function () {
+        btn.textContent = 'Copy experiment';
+        btn.classList.remove('done');
+      }, 1500);
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); ok(); } catch (e) { btn.textContent = 'Failed'; }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(ok, fallback);
+    } else { fallback(); }
+  });
+  heading.appendChild(btn);
 });
 </script>
 </body>
