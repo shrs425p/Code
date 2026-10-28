@@ -1,8 +1,3 @@
-# Agile SD and DevOps Lab – TE CSE (AIML) – Steps, Commands & Code
-
-> Only step numbers, steps, commands, code and expected results. No theory.
-> The slides contain two experiments titled "Exp7" (Docker Compose and Monitoring). Both are included below. Slide numbering for Exp9 skips Step 8; original numbers are kept.
-
 ---
 
 # Exp1 – Agile Software Project Lifecycle using Jira
