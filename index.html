@@ -3,1561 +3,1427 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DevOps Lab Experiments</title>
+<title>Statistical Machine Learning (SML) Lab Experiments</title>
 <style>
-html { background:#000; scroll-behavior:smooth; }
-body { background:#000; color:#fff; font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; line-height:1.6; max-width:900px; margin:0 auto; padding:20px 16px 60px; border-top:1px solid #fff; border-bottom:1px solid #fff; }
-h1,h2,h3 { color:#fff; }
-h1 { padding-bottom:6px; margin-top:2rem; scroll-margin-top:12px; }
-a { color:#fff; text-decoration:none; }
-a:hover { text-decoration:underline; }
-hr { display:none; }
-code { background:#000; color:#fff; padding:2px 5px; font-size:.92em; }
-pre { position:relative; background:#000; border-top:1px solid #fff; border-bottom:1px solid #fff; padding:10px 0; overflow-x:auto; }
-pre code { display:block; background:#000; color:#fff; padding:0 60px 0 0; }
-table { border-collapse:collapse; border-top:1px solid #fff; border-bottom:1px solid #fff; display:block; overflow-x:auto; }
-th,td { padding:6px 10px; }
-th { background:#000; }
-em,strong { color:#fff; }
-.copy-btn { position:absolute; top:8px; right:0; background:#000; color:#fff; border:0; padding:4px 0 4px 10px; font-size:12px; cursor:pointer; }
-.copy-btn:hover,.copy-btn.done { background:#fff; color:#000; }
-.copy-exp-btn { background:#000; color:#fff; border:1px solid #fff; padding:4px 8px; margin-left:10px; font-size:12px; cursor:pointer; vertical-align:middle; }
-.copy-exp-btn:hover,.copy-exp-btn.done { background:#fff; color:#000; }
-.experiment-page { display:none; }
-.experiment-page.active { display:block; }
-.page-controls { display:flex; justify-content:space-between; gap:12px; border-top:1px solid #fff; padding-top:14px; margin-top:28px; }
-.page-btn { background:#000; color:#fff; border:1px solid #fff; padding:6px 12px; cursor:pointer; }
-.page-btn:hover:not(:disabled) { background:#fff; color:#000; }
-.page-btn:disabled { opacity:.45; cursor:default; }
+* { box-sizing: border-box; }
+html { background:#0a0a0a; scroll-behavior:smooth; }
+body {
+  background:#0a0a0a;
+  color:#e0e0e0;
+  font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height:1.6;
+  max-width:960px;
+  margin:0 auto;
+  padding:24px 18px 80px;
+}
+header {
+  border-bottom:1px solid #2d2d2d;
+  padding-bottom:16px;
+  margin-bottom:28px;
+}
+h1 {
+  color:#ffffff;
+  font-size:1.85rem;
+  font-weight:700;
+  margin:0 0 10px 0;
+}
+.subtitle {
+  color:#8e8e8e;
+  font-size:0.95rem;
+  margin:0 0 16px 0;
+}
+.nav-bar {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 12px;
+  background:#141414;
+  padding:12px 16px;
+  border-radius:6px;
+  border:1px solid #222;
+  font-size:0.92rem;
+  position:sticky;
+  top:10px;
+  z-index:100;
+  backdrop-filter: blur(8px);
+}
+.nav-bar a {
+  color:#90caf9;
+  text-decoration:none;
+  padding:2px 6px;
+  border-radius:4px;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-bar a:hover {
+  background:#1e3a5f;
+  color:#ffffff;
+}
+.experiment-block {
+  margin-top:36px;
+  padding-top:14px;
+  border-top:1px solid #262626;
+  scroll-margin-top:70px;
+}
+.exp-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:12px;
+}
+h2 {
+  color:#ffffff;
+  font-size:1.25rem;
+  font-weight:600;
+  margin:0;
+}
+.copy-exp-btn {
+  background:#1a1a1a;
+  color:#f0f0f0;
+  border:1px solid #444;
+  border-radius:5px;
+  padding:6px 14px;
+  font-size:13px;
+  font-weight:500;
+  cursor:pointer;
+  transition: all 0.2s ease;
+}
+.copy-exp-btn:hover {
+  background:#2f2f2f;
+  border-color:#777;
+  color:#fff;
+}
+.copy-exp-btn.copied {
+  background:#2e7d32;
+  border-color:#4caf50;
+  color:#ffffff;
+}
+pre {
+  background:#121212;
+  border:1px solid #282828;
+  border-radius:8px;
+  padding:16px 18px;
+  overflow-x:auto;
+  margin:0;
+  font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size:13.5px;
+  line-height:1.55;
+}
+code {
+  color:#d4d4d4;
+  white-space:pre;
+  word-spacing:normal;
+  word-break:normal;
+  tab-size:4;
+}
+footer {
+  margin-top:60px;
+  padding-top:20px;
+  border-top:1px solid #222;
+  color:#666;
+  text-align:center;
+  font-size:0.85rem;
+}
 </style>
 </head>
 <body>
-<p><a href="#exp1">Exp1</a> | <a href="#exp2">Exp2</a> | <a href="#exp3">Exp3</a> | <a href="#exp4">Exp4</a> | <a href="#exp5">Exp5</a> | <a href="#exp6">Exp6</a> | <a href="#exp7a">Exp7 (A)</a> | <a href="#exp7b">Exp7 (B)</a> | <a href="#exp9">Exp9</a> | <a href="#exp10">Exp10</a></p>
-<hr />
-<p><a id="exp1"></a></p>
-<h1>Exp1 – Agile Software Project Lifecycle using Jira</h1>
-<p><strong>Step 1:</strong> Sign up for a free Jira account → Name your first project → keep all default selections.
-<em>Expected:</em> Jira workspace for the created project opens (free plan, 10 users).</p>
-<p><strong>Step 2–5:</strong> Theory only (skipped).</p>
-<p><strong>Step 6:</strong> Create 2nd project.
-- Click Jira logo → home page
-- Projects → <code>+</code> → select <strong>Kanban</strong> → <strong>Use template</strong> (default)
-- Select <strong>Team-managed</strong>
-- Project details → Name: <code>Learning Jira Project Creation</code>
-- <strong>Create project</strong> → Invite teammates → <strong>Skip</strong></p>
-<p><em>Expected:</em> Kanban board with 3 columns: <strong>To do / In progress / Done</strong>.</p>
-<p><strong>Step 7:</strong> Create tasks on the board.
-1. Go to <strong>To do</strong> → Create task: <code>Discuss the project with customer</code> → click <strong>Create work item</strong>
-2. Create another task: <code>Discuss with developers</code> → <strong>Create work item</strong>
-3. Drag tasks across: To do → In progress → Done</p>
-<p><em>Expected:</em> Tasks move between the 3 columns.</p>
-<p><strong>Step 8:</strong> Create task with dates.
-- Board → <strong>Create</strong> → select status
-- Summary: <code>Start development on project model</code>
-- Assignee: <em>your name</em>
-- Due date: <code>30.8.26</code>
-- Start date: <code>1.8.26</code>
-- <strong>Create</strong></p>
-<p><em>Expected:</em> Task appears on the Board.</p>
-<p><strong>Step 9:</strong> Backlog.
-- Project: Learning Jira → 3 dots → <strong>Project Settings</strong> → <strong>Features</strong> → enable <strong>Backlog</strong>
-- Open <strong>Backlog</strong> (appears before Board) → create <code>User Acceptance Testing</code>
-- Change status to To do / In progress, or drag it to To do</p>
-<p><em>Expected:</em> Backlog tab visible; task moves to board when status changed.</p>
-<p><strong>Step 10:</strong> Child task / subtask.
-- Create task in To do: <code>Develop Module 2 software</code>
-- Open task → click <code>+</code> → <strong>Create child work item</strong>: <code>Develop login submodule</code> → Create
-- Click <code>+</code> again → <code>Change homepage picture</code> → Create</p>
-<p><em>Expected:</em> Main task cannot go from In progress → Done until all child tasks are Done.</p>
-<h3>Epic / Story / Task / Subtask example (Project: Software Development)</h3>
-<table>
-<thead>
-<tr>
-<th>Concept</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Epic</td>
-<td>Password Reset feature</td>
-</tr>
-<tr>
-<td>Story</td>
-<td>As a user, I want to reset my password so that I can regain access.</td>
-</tr>
-<tr>
-<td>Task</td>
-<td>Design UI, Build API, Setup Email Notification</td>
-</tr>
-<tr>
-<td>Subtask</td>
-<td>Create wireframe, Validate input, Generate token, Create template</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Step 11:</strong> Create 3rd project.
-- Jira → Projects → <code>+</code> → <strong>Kanban</strong> → <strong>Use template</strong> → <strong>Team-managed</strong>
-- Name: <code>Software Development</code> → Create project → Invite teammates → Skip</p>
-<p><strong>Step 12:</strong> Configure work types.
-- Project Software Development → 3 dots → <strong>Project Settings</strong>
-  1. <strong>Features</strong> → enable <strong>Backlog</strong>
-  2. <strong>Work types</strong> (expand) → <strong>Add work type</strong> → <code>Bug</code> → Add
-  3. Same for <code>Story</code> → Add</p>
-<p><em>Expected:</em> Work types listed: Epic, Bug, Story, Task.</p>
-<p><strong>Step 13:</strong> Create Epic and Story.
-- Board is blank → go to <strong>Backlog</strong>
-- Select <strong>Epic</strong> → enable <strong>Show epic panel</strong> → <strong>Create epic</strong>: <code>Password reset feature</code>
-- Go to Board → <strong>To do</strong> → Create task → select <strong>Story</strong> type: <code>As a registered user, I want to get option to reset my password to regain access.</code></p>
-<p><strong>Step 14:</strong> Link story to epic and rename.
-- Backlog → in the story click <strong>+Epic</strong> → select the created epic
-- Go to Epic → <strong>View all details</strong> → rename to <code>Epic1: Password Reset</code>
-- Rename story to <code>Story1: &lt;text&gt;</code></p>
-<p><em>Expected:</em> Story visible on board with epic color tag (pink).</p>
-<p><strong>Step 15:</strong> Create tasks under story (To do).
-1. <code>Password Reset User Interface Design</code>
-2. <code>Password Reset functionality using API</code>
-3. <code>Email Configuration</code></p>
-<p><em>Expected:</em> Story moves to Done only when all 3 tasks are Done.</p>
-<p><strong>Step 16:</strong> Create subtasks.
-- Open task <code>Password reset UI Design</code> → <code>+</code> → <strong>Create child work item</strong>
-  1. <code>Discuss with Solution Architect and UI Designer</code> → Create
-  2. <code>+</code> → <code>Assign Developer</code>
-  3. <code>+</code> → <code>Start Development</code></p>
-<p><em>Expected:</em> Main task can move to Done only after all child tasks are Done.</p>
-<p><strong>Step 17:</strong> Create a Bug.
-- Board → <strong>Create (+)</strong> → select <strong>Bug</strong>: <code>Users are complaining that, they are getting multiple emails for password reset</code>
-- Move: In progress → Done</p>
-<p><strong>Step 18:</strong> Open <strong>Summary</strong> tab.
-<em>Expected:</em> Counts of completed / updated / created work items; Epic progress 50 %; after moving story to Done → Epic 100 %.</p>
-<p><strong>Step 19:</strong> Open <strong>List</strong> tab.
-<em>Expected:</em> Tasks and status shown as a list.</p>
-<p><strong>Step 20:</strong> Open <strong>Calendar</strong> tab. Add an item with <code>+</code>.
-<em>Expected:</em> Item goes to Backlog.</p>
-<p><strong>Step 21:</strong> Hover over <strong>Project templates</strong> options to view available templates.</p>
-<p><strong>Step 22:</strong> Create workflow status.
-- Software Development project → right-side 3 dots → <strong>Manage workflow</strong>
-- <strong>Add status</strong> → <strong>Create new status</strong>: <code>Deployed in Prod</code> → Add
-- <strong>Update workflow</strong> → Save workflow for selected issues → select <strong>Task, Subtask, Bug</strong> → <strong>Save &amp; Continue</strong></p>
-<p><strong>Step 23:</strong> Go to project.
-<em>Expected:</em> New column <strong>Deployed in Prod</strong> at the end of the board. Create task <code>Deployed Password Reset</code>.</p>
-<p><strong>Step 24:</strong> Releases.
-- <strong>Releases</strong> → <strong>Create version</strong>
-  - Name: <code>Password reset module v1.0</code>
-  - Start date: <code>03.8.26</code>
-  - Release date: <code>1.9.26</code>
-  - Description: <code>Release date is on 1st Sept. 2026</code>
-- <strong>Save</strong>; create one more version similarly.</p>
-<p><em>Expected:</em> Versions listed under Releases.</p>
-<hr />
-<p><a id="exp2"></a></p>
-<h1>Exp2 – Version Control using Git</h1>
-<p><strong>Step 1:</strong> Create project folder.</p>
-<pre><code class="language-bash">mkdir example.com
-cd example.com
-ls
-</code></pre>
-<p><em>Expected:</em> Empty directory.</p>
-<p><strong>Step 2:</strong> Create file.</p>
-<pre><code class="language-bash">vim calculator.sh
-</code></pre>
-<p>Type (<code>i</code> to insert), then <code>Esc</code> → <code>:wq</code>:</p>
-<pre><code class="language-bash">x=a+b
-</code></pre>
-<pre><code class="language-bash">ls
-</code></pre>
-<p><em>Expected:</em> <code>calculator.sh</code></p>
-<p><strong>Step 3:</strong> Install Git.</p>
-<pre><code class="language-bash">apt-get install git
-git
-</code></pre>
-<p><em>Expected:</em> List of git commands/options displayed.</p>
-<p><strong>Step 4:</strong> Initialize repository.</p>
-<pre><code class="language-bash">git init
-ls
-ls -la
-ls .git
-</code></pre>
-<p><em>Expected:</em> <code>Initialized empty Git repository</code>; <code>.git</code> folder visible; <code>.git</code> contains <code>hooks</code>, <code>objects</code>, <code>refs</code>, <code>config</code>, etc.</p>
-<p><strong>Step 5:</strong> Check status.</p>
-<pre><code class="language-bash">git status
-</code></pre>
-<p><em>Expected:</em> <code>Untracked files: calculator.sh</code> with suggestion to use <code>git add</code>.</p>
-<p><strong>Step 6:</strong> Track file.</p>
-<pre><code class="language-bash">git add calculator.sh
-git status
-</code></pre>
-<p><em>Expected:</em> <code>Changes to be committed: new file: calculator.sh</code>; no untracked files.</p>
-<p><strong>Step 7:</strong> Modify file.</p>
-<pre><code class="language-bash">clear
-ls
-vim calculator.sh
-</code></pre>
-<p>Change to:</p>
-<pre><code class="language-bash">x=a+b+c
-</code></pre>
-<pre><code class="language-bash">git status
-git diff
-clear
-</code></pre>
-<p><em>Expected:</em> <code>modified: calculator.sh</code>; <code>git diff</code> shows <code>-x=a+b</code> / <code>+x=a+b+c</code>.</p>
-<p><strong>Step 8:</strong> Configure identity and first commit.</p>
-<pre><code class="language-bash">vim calculator.sh
-</code></pre>
-<p>Set content:</p>
-<pre><code class="language-bash">x=a+b;
-</code></pre>
-<pre><code class="language-bash">git config --global user.name &quot;Sameer&quot;
-git config --global user.email &quot;sstathare@git-india.edu.in&quot;
-git add calculator.sh
-git commit -m &quot;this is my first version of addition&quot;
-git status
-</code></pre>
-<p><em>Expected:</em> <code>[main &lt;id&gt;] this is my first version of addition</code>; <code>On branch main – nothing to commit, working tree clean</code>.</p>
-<p><strong>Step 9:</strong> Second modification.</p>
-<pre><code class="language-bash">vim calculator.sh
-</code></pre>
-<p>Content:</p>
-<pre><code class="language-bash">x=a+b
-y=a-b
-</code></pre>
-<pre><code class="language-bash">cat calculator.sh
-git status
-</code></pre>
-<p><em>Expected:</em> <code>Changes not staged for commit: modified: calculator.sh</code>.</p>
-<p><strong>Step 10:</strong> Inspect and commit second version.</p>
-<pre><code class="language-bash">ls -la
-ls .git/
-ls .git/objects
-ls
-git status
-git diff
-git add calculator.sh
-git status
-git commit -m &quot;this is my second version&quot;
-clear
-</code></pre>
-<p><em>Expected:</em> <code>git diff</code> shows <code>+y=a-b</code>; commit created.</p>
-<p><strong>Step 11:</strong> View history.</p>
-<pre><code class="language-bash">git log
-cat calculator.sh
-</code></pre>
-<p><em>Expected:</em> Two commits with commit id, author, date/time; file shows both lines.</p>
-<p><strong>Step 12:</strong> Go back to first version.</p>
-<pre><code class="language-bash">git log
-git reset --hard &lt;paste first commit id&gt;
-cat calculator.sh
-</code></pre>
-<p><em>Expected:</em> <code>HEAD is now at &lt;id&gt; this is my first version of addition</code>; file shows <code>x=a+b</code>.</p>
-<p><strong>Step 13:</strong> GitHub repository.
-- Create GitHub account → Sign up
-- GitHub icon → <strong>New Repository</strong>
-- Repo name: <code>TE_Shell_Project</code>
-- Description: <code>Shell scripting example</code>
-- <strong>Public</strong>
-- Check <strong>Add a README file</strong>
-- <strong>Create repository</strong></p>
-<p><em>Expected:</em> Repository page opens with README.md.</p>
-<p><strong>Step 14:</strong> Explore branching strategy.
-- Open <code>https://github.com/kubernetes/kubernetes</code>
-- Observe master branch, multiple feature branches, release branches (with version numbers)</p>
-<hr />
-<p><a id="exp3"></a></p>
-<h1>Exp3 – CI Pipeline using GitHub Actions</h1>
-<p><strong>Step 1:</strong> Create GitHub account at <code>https://github.com</code>.</p>
-<p><strong>Step 2:</strong> Create repository.
-- <strong>New Repository</strong> → Name: <code>CI-Pipeline-Demo</code> → <strong>Public</strong> → <strong>Create Repository</strong></p>
-<p><strong>Step 3:</strong> Upload project: create file <code>index.html</code> → Commit.</p>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;title&gt;CI Demo&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;Continuous Integration using GitHub Actions&lt;/h1&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p><strong>Step 4:</strong> Create workflow.
-- <strong>Actions</strong> → <strong>set up a workflow yourself</strong>
-<em>Expected:</em> GitHub creates <code>.github/workflows/main.yml</code>.</p>
-<p><strong>Step 5:</strong> Paste workflow and commit.</p>
-<pre><code class="language-yaml">name: CI Pipeline
 
-on:
-  push:
-    branches:
-      - main
+<header>
+  <h1>Statistical Machine Learning (SML) Lab Experiments</h1>
+  <p class="subtitle">Complete Python code extracted from SML Lab practicals (Experiments 1–10).</p>
+  <nav class="nav-bar">
+    <a href="#exp1">Exp 1</a> | 
+<a href="#exp2">Exp 2</a> | 
+<a href="#exp3">Exp 3</a> | 
+<a href="#exp4">Exp 4</a> | 
+<a href="#exp5">Exp 5</a> | 
+<a href="#exp6">Exp 6</a> | 
+<a href="#exp7">Exp 7</a> | 
+<a href="#exp8">Exp 8</a> | 
+<a href="#exp9">Exp 9</a> | 
+<a href="#exp10">Exp 10</a>
+  </nav>
+</header>
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+<main>
 
-      - name: Display Welcome Message
-        run: echo &quot;Continuous Integration Started&quot;
-
-      - name: Display Current Directory
-        run: pwd
-
-      - name: List Repository Files
-        run: ls
-
-      - name: Display Completion Message
-        run: echo &quot;Pipeline Executed Successfully&quot;
-</code></pre>
-<p><strong>Step 6:</strong> Modify <code>index.html</code> – add:</p>
-<pre><code class="language-html">&lt;h2&gt;GitHub Actions Demo&lt;/h2&gt;
-</code></pre>
-<p>Commit.
-<em>Expected:</em> Workflow starts automatically. Actions tab: yellow circle (running) → green tick (success).</p>
-<p><strong>Step 7:</strong> View details: click <strong>CI Pipeline</strong> → click <strong>build</strong>.
-<em>Expected:</em> Steps listed: Checkout Repository → Display Welcome Message → Display Current Directory → List Repository Files → Display Completion Message.</p>
-<p><strong>Step 8:</strong> Click each step to see console output.
-<em>Expected:</em></p>
-<pre><code>Continuous Integration Started
-/home/runner/work/CI-Pipeline-Demo
-index.html
-README.md
-Pipeline Executed Successfully
-</code></pre>
-<p><strong>Step 9:</strong> Output meaning (reference)</p>
-<table>
-<thead>
-<tr>
-<th>Output</th>
-<th>Source</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Checkout Repository</td>
-<td>downloads files</td>
-</tr>
-<tr>
-<td>pwd</td>
-<td>current directory</td>
-</tr>
-<tr>
-<td>ls</td>
-<td>lists files</td>
-</tr>
-<tr>
-<td>echo</td>
-<td>prints message</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Step 10:</strong> Introduce an error – add this step to the workflow and commit.</p>
-<pre><code class="language-yaml">      - name: Invalid Command
-        run: abcxyz
-</code></pre>
-<p><em>Expected:</em> Workflow fails – red cross in Actions tab; error <code>abcxyz: command not found</code> in logs.</p>
-<p><strong>Step 11:</strong> Fix the error – replace with:</p>
-<pre><code class="language-yaml">      - name: Invalid Command
-        run: echo &quot;Error Fixed&quot;
-</code></pre>
-<p>Commit.
-<em>Expected:</em> Workflow succeeds – green tick.</p>
-<hr />
-<p><a id="exp4"></a></p>
-<h1>Exp4 – Ansible Provisioning &amp; Configuration</h1>
-<p><strong>Step 1:</strong> Open Ubuntu → Terminal (<code>Ctrl + Alt + T</code>).</p>
-<p><strong>Step 2:</strong> Update package list.</p>
-<pre><code class="language-bash">sudo apt update
-</code></pre>
-<p><em>Expected:</em> Package lists downloaded/refreshed.</p>
-<p><strong>Step 3:</strong> Install Ansible.</p>
-<pre><code class="language-bash">sudo apt install ansible -y
-</code></pre>
-<p><strong>Step 4:</strong> Verify.</p>
-<pre><code class="language-bash">ansible --version
-</code></pre>
-<p><em>Expected:</em> <code>ansible [core x.x.x]</code> with config/python details.</p>
-<p><strong>Step 5:</strong> Create folder.</p>
-<pre><code class="language-bash">mkdir ansible-lab
-cd ansible-lab
-pwd
-</code></pre>
-<p><em>Expected:</em> <code>/home/&lt;user&gt;/ansible-lab</code></p>
-<p><strong>Step 6:</strong> Create inventory file.</p>
-<pre><code class="language-bash">nano inventory
-</code></pre>
-<p>Content:</p>
-<pre><code>localhost ansible_connection=local
-</code></pre>
-<p>Save: <code>Ctrl+O</code> → <code>Enter</code> → <code>Ctrl+X</code></p>
-<p>Alternative (remote servers):</p>
-<pre><code>[servers]
-192.168.10.20
-192.168.10.21
-</code></pre>
-<p><strong>Step 7:</strong> Test inventory.</p>
-<pre><code class="language-bash">ansible all -i inventory -m ping
-</code></pre>
-<p><em>Expected:</em></p>
-<pre><code>localhost | SUCCESS =&gt; {
-    &quot;changed&quot;: false,
-    &quot;ping&quot;: &quot;pong&quot;
-}
-</code></pre>
-<p><strong>Step 8:</strong> Create playbook.</p>
-<pre><code class="language-bash">nano install_nginx.yml
-</code></pre>
-<p><strong>Step 9:</strong> Write playbook.</p>
-<pre><code class="language-yaml">---
-- hosts: localhost
-  become: yes
-  tasks:
-    - name: Install Nginx Web Server
-      apt:
-        name: nginx
-        state: present
-</code></pre>
-<p>Save: <code>Ctrl+O</code> → <code>Enter</code> → <code>Ctrl+X</code></p>
-<p><strong>Step 10:</strong> Execute playbook.</p>
-<pre><code class="language-bash">ansible-playbook -i inventory install_nginx.yml
-</code></pre>
-<p><em>Expected:</em></p>
-<pre><code>PLAY [localhost] ...
-TASK [Gathering Facts] ... ok
-TASK [Install Nginx Web Server] ... changed
-PLAY RECAP
-localhost : ok=2 changed=1 unreachable=0 failed=0
-</code></pre>
-<p>(Slide expects at least <code>changed=1</code>.)</p>
-<p><strong>Step 11:</strong> Verify installation.</p>
-<pre><code class="language-bash">nginx -v
-systemctl status nginx
-</code></pre>
-<p><em>Expected:</em> <code>nginx version: nginx/1.xx</code>; <code>Active: active (running)</code>.</p>
-<p><strong>Step 12:</strong> Open browser → <code>http://localhost</code>
-<em>Expected:</em> "Welcome to nginx!" page.</p>
-<hr />
-<p><a id="exp5"></a></p>
-<h1>Exp5 – Docker Containerization</h1>
-<p><strong>Step 1:</strong> Open Terminal (<code>Ctrl + Alt + T</code>).</p>
-<p><strong>Step 2:</strong> Check Docker.</p>
-<pre><code class="language-bash">docker --version
-</code></pre>
-<p><em>Expected:</em> <code>Docker version xx.x.x, build ...</code></p>
-<p><strong>Step 3:</strong> Check Docker service.</p>
-<pre><code class="language-bash">sudo systemctl status docker
-</code></pre>
-<p><em>Expected:</em> <code>Active: active (running)</code></p>
-<p>If not running:</p>
-<pre><code class="language-bash">sudo systemctl start docker
-sudo systemctl enable docker
-sudo systemctl status docker
-</code></pre>
-<p><strong>Step 4:</strong> Create project folder.</p>
-<pre><code class="language-bash">mkdir DockerLab
-cd DockerLab
-pwd
-</code></pre>
-<p><em>Expected:</em> <code>/home/&lt;user&gt;/DockerLab</code></p>
-<p><strong>Step 5:</strong> Create Python app.</p>
-<pre><code class="language-bash">nano app.py
-</code></pre>
-<pre><code class="language-python">from flask import Flask
-
-app = Flask(__name__)
-
-@app.route(&quot;/&quot;)
-def home():
-    return &quot;Hello Students! Welcome to Docker Lab.&quot;
-
-app.run(host=&quot;0.0.0.0&quot;, port=5000)
-</code></pre>
-<p>Save: <code>Ctrl+O</code> → <code>Enter</code> → <code>Ctrl+X</code></p>
-<pre><code class="language-bash">ls
-</code></pre>
-<p><em>Expected:</em> <code>app.py</code></p>
-<p><strong>Step 6:</strong> Create requirements file.</p>
-<pre><code class="language-bash">nano requirements.txt
-</code></pre>
-<pre><code>Flask
-</code></pre>
-<p>Save and exit.</p>
-<pre><code class="language-bash">cat requirements.txt
-</code></pre>
-<p><em>Expected:</em> <code>Flask</code></p>
-<p><strong>Step 7:</strong> Create Dockerfile (no extension).</p>
-<pre><code class="language-bash">nano Dockerfile
-</code></pre>
-<pre><code class="language-dockerfile">FROM python:3.11
-
-WORKDIR /app
-
-COPY . .
-
-RUN pip install -r requirements.txt
-
-EXPOSE 5000
-
-CMD [&quot;python&quot;,&quot;app.py&quot;]
-</code></pre>
-<pre><code class="language-bash">cat Dockerfile
-</code></pre>
-<p><em>Expected:</em> Dockerfile content displayed.</p>
-<p><strong>Step 8:</strong> Check files.</p>
-<pre><code class="language-bash">ls
-</code></pre>
-<p><em>Expected:</em> <code>app.py  Dockerfile  requirements.txt</code></p>
-<p><strong>Step 9:</strong> Build image.</p>
-<pre><code class="language-bash">sudo docker build -t myapp .
-</code></pre>
-<p><em>Expected:</em> <code>Successfully built &lt;id&gt;</code> / <code>Successfully tagged myapp:latest</code></p>
-<p><strong>Step 10:</strong> Check images.</p>
-<pre><code class="language-bash">sudo docker images
-</code></pre>
-<p><em>Expected:</em> <code>REPOSITORY: myapp</code> listed.</p>
-<p><strong>Step 11:</strong> Run container.</p>
-<pre><code class="language-bash">sudo docker run -d -p 5000:5000 --name mycontainer myapp
-</code></pre>
-<p><em>Expected:</em> Long container ID printed.</p>
-<p><strong>Step 12:</strong> Check running containers.</p>
-<pre><code class="language-bash">sudo docker ps
-</code></pre>
-<p><em>Expected:</em> <code>mycontainer</code> with status <code>Up</code>, port <code>0.0.0.0:5000-&gt;5000/tcp</code>.</p>
-<p><strong>Step 13:</strong> Open browser → <code>http://localhost:5000</code>
-<em>Expected:</em> <code>Hello Students! Welcome to Docker Lab.</code></p>
-<p><strong>Step 14:</strong> View logs.</p>
-<pre><code class="language-bash">sudo docker logs mycontainer
-</code></pre>
-<p><em>Expected:</em> Flask startup messages (<code>Running on http://0.0.0.0:5000</code>) and request logs.</p>
-<p><strong>Step 15:</strong> Enter container.</p>
-<pre><code class="language-bash">sudo docker exec -it mycontainer bash
-</code></pre>
-<p>(If bash does not work: <code>sudo docker exec -it mycontainer sh</code>)
-<em>Expected:</em> Prompt changes to <code>root@&lt;container-id&gt;:/app#</code></p>
-<p><strong>Step 16:</strong> Verify files inside container.</p>
-<pre><code class="language-bash">ls
-pwd
-exit
-</code></pre>
-<p><em>Expected:</em> <code>app.py  Dockerfile  requirements.txt</code> (slide shows <code>app.py requirements.txt</code>); <code>/app</code></p>
-<p><strong>Step 17:</strong> Stop container.</p>
-<pre><code class="language-bash">sudo docker stop mycontainer
-sudo docker ps
-</code></pre>
-<p><em>Expected:</em> Container no longer listed.</p>
-<p><strong>Step 18:</strong> Start again.</p>
-<pre><code class="language-bash">sudo docker start mycontainer
-sudo docker ps
-</code></pre>
-<p><em>Expected:</em> <code>mycontainer</code> is <code>Up</code> again.</p>
-<p><strong>Step 19:</strong> Restart.</p>
-<pre><code class="language-bash">sudo docker restart mycontainer
-</code></pre>
-<p><em>Expected:</em> <code>mycontainer</code> printed; container running.</p>
-<p><strong>Step 20:</strong> Remove container.</p>
-<pre><code class="language-bash">sudo docker stop mycontainer
-sudo docker rm mycontainer
-sudo docker ps -a
-</code></pre>
-<p><em>Expected:</em> <code>mycontainer</code> not listed.</p>
-<p><strong>Step 21:</strong> Remove image.</p>
-<pre><code class="language-bash">sudo docker rmi myapp
-sudo docker images
-</code></pre>
-<p><em>Expected:</em> <code>Untagged: myapp:latest</code>; <code>myapp</code> no longer listed.</p>
-<hr />
-<p><a id="exp6"></a></p>
-<h1>Exp6 – Terraform: Create EC2 Instance on AWS</h1>
-<p><strong>Prerequisite:</strong> Install Atom editor (<code>https://atom.io/</code>) or any editor; Terraform installed.</p>
-<p><strong>Step 1:</strong> Create working directory <code>C:\Terraform_Scripts</code>.</p>
-<p><strong>Step 2:</strong> Open Atom → <strong>File → Open Folder</strong> → select <code>Terraform_Scripts</code>.</p>
-<p><strong>Step 3:</strong> Create new file <code>EC2_on_Terraform</code>.</p>
-<p><strong>Step 4:</strong> Get AWS credentials.
-- Open <code>https://aws.amazon.com/console</code> and log in
-- Search <strong>IAM</strong> → <strong>Users</strong> → <strong>Add users</strong>
-- User name: <code>Terraform_User</code>
-- Access type: <strong>Programmatic access</strong> → <strong>Next: Permissions</strong>
-- <strong>Create group</strong> → Group name: <code>Terraform_Group</code> → select policy <strong>AdministratorAccess</strong> → <strong>Create group</strong>
-- Select the group → <strong>Next: Tags</strong>
-- Tag: Key <code>Terraform</code>, Value <code>Access_Policy</code> (optional) → <strong>Next: Review</strong> → <strong>Create user</strong>
-- Copy <strong>Access key ID</strong> and <strong>Secret access key</strong> (or <strong>Download .csv</strong>)</p>
-<p><em>Expected:</em> Success screen showing Access key ID and Secret access key.</p>
-<p><strong>Step 5:</strong> Get AMI ID.
-- AWS Console → <strong>EC2</strong> → <strong>Launch instance</strong> → copy the AMI ID of the desired OS (note the region, e.g. <code>us-east-1</code>; AMI ids differ per region)</p>
-<p><strong>Step 6:</strong> Write script and save as <code>EC2_on_Terraform.tf</code>.</p>
-<pre><code class="language-hcl">provider &quot;aws&quot; {
-  access_key = &quot;&lt;YOUR_ACCESS_KEY&gt;&quot;
-  secret_key = &quot;&lt;YOUR_SECRET_KEY&gt;&quot;
-  region     = &quot;us-east-1&quot;
-}
-
-resource &quot;aws_instance&quot; &quot;terraform-ec2&quot; {
-  ami           = &quot;&lt;YOUR_AMI_ID&gt;&quot;
-  instance_type = &quot;t2.micro&quot;
-}
-</code></pre>
-<p><strong>Step 7:</strong> Open Command Prompt.</p>
-<pre><code class="language-cmd">cd \
-cd Terraform_Scripts
-dir
-</code></pre>
-<p><em>Expected:</em> <code>EC2_on_Terraform.tf</code> listed.</p>
-<p><strong>Step 8:</strong> Initialize.</p>
-<pre><code class="language-cmd">terraform init
-</code></pre>
-<p><em>Expected:</em></p>
-<pre><code>Initializing the backend...
-Initializing provider plugins...
-- Installing hashicorp/aws vX.XX.X...
-Terraform has been successfully initialized!
-</code></pre>
-<p>(<code>.terraform.lock.hcl</code> created.)</p>
-<p><strong>Step 9:</strong> Plan.</p>
-<pre><code class="language-cmd">terraform plan
-</code></pre>
-<p><em>Expected:</em> <code>+ resource "aws_instance" "terraform-ec2"</code> with <code>ami</code>, <code>instance_type = "t2.micro"</code>, many <code>(known after apply)</code>; <code>Plan: 1 to add, 0 to change, 0 to destroy.</code></p>
-<p><strong>Step 10:</strong> Check EC2 dashboard before apply.
-<em>Expected:</em> No running instances.</p>
-<p><strong>Step 11:</strong> Apply.</p>
-<pre><code class="language-cmd">terraform apply
-</code></pre>
-<p>Type <code>yes</code> when prompted.
-<em>Expected:</em></p>
-<pre><code>aws_instance.terraform-ec2: Creating...
-aws_instance.terraform-ec2: Still creating... [10s elapsed]
-...
-aws_instance.terraform-ec2: Creation complete after 55s [id=i-xxxxxxxxxxxxxxxxx]
-Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
-</code></pre>
-<p><strong>Step 12:</strong> Check EC2 dashboard after apply.
-<em>Expected:</em> One instance, state <strong>Running</strong>.</p>
-<p><strong>Step 13:</strong> Destroy.</p>
-<pre><code class="language-cmd">terraform destroy
-</code></pre>
-<p>Type <code>yes</code> when prompted.
-<em>Expected:</em></p>
-<pre><code>aws_instance.terraform-ec2: Destroying... [id=i-xxxxxxxxxxxxxxxxx]
-aws_instance.terraform-ec2: Destruction complete after 48s
-Destroy complete! Resources: 1 destroyed.
-</code></pre>
-<p><strong>Step 14:</strong> Check EC2 dashboard after destroy.
-<em>Expected:</em> Instance state <strong>Terminated</strong>.</p>
-<hr />
-<p><a id="exp7a"></a></p>
-<h1>Exp7 (A) – Multi-Service Application using Docker Compose</h1>
-<p><strong>Step 1:</strong> Install Docker Desktop.
-1. Open Chrome → search <strong>Docker Desktop</strong> → download for Windows
-2. Double-click <code>Docker Desktop Installer.exe</code> → <strong>Yes</strong>
-3. Keep defaults, ensure <strong>Use WSL 2 instead of Hyper-V</strong> is ticked → <strong>Install</strong> (5–10 min)
-4. <strong>Restart computer</strong></p>
-<p><strong>Step 2:</strong> Start Docker Desktop.
-<em>Expected:</em> Wait until status shows <code>Docker Engine Running</code>.</p>
-<p><strong>Step 3:</strong> Verify installation (Command Prompt / PowerShell).</p>
-<pre><code class="language-cmd">docker --version
-docker compose version
-</code></pre>
-<p><em>Expected:</em> <code>Docker version 28.x.x</code>; <code>Docker Compose version v2.x.x</code></p>
-<p><strong>Step 4:</strong> Install VS Code (default settings) and open it once.</p>
-<p><strong>Step 5:</strong> Create folders.</p>
-<pre><code>Desktop
-└── DockerLab
-    └── compose-demo
-</code></pre>
-<p><strong>Step 6:</strong> VS Code → <strong>File → Open Folder</strong> → select <code>compose-demo</code>.</p>
-<p><strong>Step 7:</strong> Create folders inside <code>compose-demo</code>: <code>app</code>, <code>nginx</code>.</p>
-<p><strong>Step 8:</strong> Create files.</p>
-<pre><code>compose-demo
-│
-├── docker-compose.yml
-├── app
-│   ├── app.py
-│   ├── Dockerfile
-│   └── requirements.txt
-└── nginx
-    └── default.conf
-</code></pre>
-<p><strong>Step 9:</strong> <code>app/app.py</code></p>
-<pre><code class="language-python">from flask import Flask
-
-app = Flask(__name__)
-
-@app.route(&quot;/&quot;)
-def home():
-    return &quot;&lt;h1&gt;Hello from Docker Compose!&lt;/h1&gt;&quot;
-
-if __name__ == &quot;__main__&quot;:
-    app.run(host=&quot;0.0.0.0&quot;, port=5000)
-</code></pre>
-<p><strong>Step 10:</strong> <code>app/requirements.txt</code></p>
-<pre><code>Flask
-</code></pre>
-<p><strong>Step 11:</strong> <code>app/Dockerfile</code></p>
-<pre><code class="language-dockerfile">FROM python:3.10
-
-WORKDIR /app
-
-COPY . .
-
-RUN pip install -r requirements.txt
-
-CMD [&quot;python&quot;,&quot;app.py&quot;]
-</code></pre>
-<p><strong>Step 12:</strong> <code>nginx/default.conf</code></p>
-<pre><code class="language-nginx">server {
-    listen 80;
-
-    location / {
-        proxy_pass http://app:5000;
-    }
-}
-</code></pre>
-<p><strong>Step 13:</strong> <code>docker-compose.yml</code></p>
-<pre><code class="language-yaml">version: '3'
-
-services:
-  app:
-    build: ./app
-    container_name: flask_app
-
-  nginx:
-    image: nginx:latest
-    container_name: nginx_server
-    ports:
-      - &quot;80:80&quot;
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - app
-</code></pre>
-<p><strong>Step 14:</strong> Open terminal in VS Code (<strong>Terminal → New Terminal</strong>) and verify folder is <code>compose-demo</code>.</p>
-<pre><code class="language-cmd">cd path\to\compose-demo
-</code></pre>
-<p><strong>Step 15:</strong> Build.</p>
-<pre><code class="language-cmd">docker compose build
-</code></pre>
-<p><em>Expected:</em> Flask image built; ends with <code>Built</code> / <code>Image ... Built</code> (first build takes several minutes).</p>
-<p><strong>Step 16:</strong> Start.</p>
-<pre><code class="language-cmd">docker compose up
-</code></pre>
-<p><em>Expected:</em> Network created; <code>flask_app</code> and <code>nginx_server</code> started; logs from both displayed.</p>
-<p><strong>Step 17:</strong> Verify (new terminal).</p>
-<pre><code class="language-cmd">docker ps
-</code></pre>
-<p><em>Expected:</em></p>
-<pre><code>CONTAINER ID   IMAGE     STATUS
-abcd1234       flask_app Up
-efgh5678       nginx     Up
-</code></pre>
-<p><strong>Step 18:</strong> Browser → <code>http://localhost</code>
-<em>Expected:</em> <code>Hello from Docker Compose!</code></p>
-<p><strong>Step 19:</strong> Stop.
-Press <code>Ctrl + C</code> or run:</p>
-<pre><code class="language-cmd">docker compose down
-</code></pre>
-<p><em>Expected:</em> Containers and network removed.</p>
-<hr />
-<p><a id="exp7b"></a></p>
-<h1>Exp7 (B) – Monitoring using Prometheus / Grafana / Nagios</h1>
-<h2>Part A – Prometheus</h2>
-<p><strong>Step 1:</strong> Open Ubuntu terminal and update.</p>
-<pre><code class="language-bash"># Ctrl + Alt + T
-sudo apt update
-</code></pre>
-<p><strong>Step 2:</strong> Install utilities.</p>
-<pre><code class="language-bash">sudo apt install wget curl tar -y
-</code></pre>
-<p><strong>Step 3:</strong> Create Prometheus user.</p>
-<pre><code class="language-bash">sudo useradd --no-create-home --shell /bin/false prometheus
-</code></pre>
-<p><strong>Step 4:</strong> Create directories.</p>
-<pre><code class="language-bash">sudo mkdir /etc/prometheus
-sudo mkdir /var/lib/prometheus
-ls /etc/prometheus
-</code></pre>
-<p><em>Expected:</em> Directory empty initially.</p>
-<p><strong>Step 5:</strong> Download the current Prometheus Linux release (from the official Prometheus site) for your architecture.</p>
-<pre><code class="language-bash">ls
-</code></pre>
-<p><em>Expected:</em> <code>prometheus-x.x.x.linux-amd64.tar.gz</code></p>
-<p><strong>Step 6:</strong> Extract.</p>
-<pre><code class="language-bash">tar -xvf prometheus-*.linux-amd64.tar.gz
-cd prometheus-*.linux-amd64
-ls
-</code></pre>
-<p><em>Expected:</em> <code>prometheus  promtool  prometheus.yml  consoles  console_libraries</code></p>
-<p><strong>Step 7:</strong> Install files.</p>
-<pre><code class="language-bash">sudo cp prometheus /usr/local/bin/
-sudo cp promtool /usr/local/bin/
-sudo cp prometheus.yml /etc/prometheus/
-</code></pre>
-<p><strong>Step 8:</strong> Set ownership.</p>
-<pre><code class="language-bash">sudo chown -R prometheus:prometheus /etc/prometheus
-sudo chown -R prometheus:prometheus /var/lib/prometheus
-sudo chown prometheus:prometheus /usr/local/bin/prometheus
-sudo chown prometheus:prometheus /usr/local/bin/promtool
-</code></pre>
-<p><strong>Step 9:</strong> Configure.</p>
-<pre><code class="language-bash">sudo nano /etc/prometheus/prometheus.yml
-</code></pre>
-<pre><code class="language-yaml">global:
-  scrape_interval: 15s
-
-scrape_configs:
-  - job_name: &quot;prometheus&quot;
-    static_configs:
-      - targets: [&quot;localhost:9090&quot;]
-</code></pre>
-<p>Save: <code>Ctrl+O</code> → <code>Enter</code> → <code>Ctrl+X</code></p>
-<p><strong>Step 10:</strong> Validate.</p>
-<pre><code class="language-bash">promtool check config /etc/prometheus/prometheus.yml
-</code></pre>
-<p><em>Expected:</em> <code>SUCCESS: /etc/prometheus/prometheus.yml is valid prometheus config file syntax</code></p>
-<p><strong>Step 11:</strong> Create service.</p>
-<pre><code class="language-bash">sudo nano /etc/systemd/system/prometheus.service
-</code></pre>
-<pre><code class="language-ini">[Unit]
-Description=Prometheus Monitoring
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-User=prometheus
-Group=prometheus
-Type=simple
-ExecStart=/usr/local/bin/prometheus \
-  --config.file=/etc/prometheus/prometheus.yml \
-  --storage.tsdb.path=/var/lib/prometheus
-
-[Install]
-WantedBy=multi-user.target
-</code></pre>
-<p>Save: <code>Ctrl+O</code> → <code>Enter</code> → <code>Ctrl+X</code></p>
-<p><strong>Step 12:</strong> Start Prometheus.</p>
-<pre><code class="language-bash">sudo systemctl daemon-reload
-sudo systemctl enable prometheus
-sudo systemctl start prometheus
-sudo systemctl status prometheus
-</code></pre>
-<p><em>Expected:</em> <code>Active: active (running)</code></p>
-<p><strong>Step 13:</strong> Browser → <code>http://localhost:9090</code>
-<em>Expected:</em> Prometheus web UI opens.</p>
-<p><strong>Step 14:</strong> Open <strong>Status → Targets</strong>.
-<em>Expected:</em> <code>prometheus</code> – <code>localhost:9090</code> – <strong>UP</strong>.</p>
-<h2>Part B – Node Exporter</h2>
-<p><strong>Step 15:</strong> Download current Node Exporter Linux release, then:</p>
-<pre><code class="language-bash">tar -xvf node_exporter-*.linux-amd64.tar.gz
-cd node_exporter-*.linux-amd64
-sudo cp node_exporter /usr/local/bin/
-sudo useradd --no-create-home --shell /bin/false node_exporter
-sudo chown node_exporter:node_exporter /usr/local/bin/node_exporter
-</code></pre>
-<p><strong>Step 16:</strong> Create service.</p>
-<pre><code class="language-bash">sudo nano /etc/systemd/system/node_exporter.service
-</code></pre>
-<pre><code class="language-ini">[Unit]
-Description=Node Exporter
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-User=node_exporter
-Group=node_exporter
-Type=simple
-ExecStart=/usr/local/bin/node_exporter
-
-[Install]
-WantedBy=multi-user.target
-</code></pre>
-<p>Save: <code>Ctrl+O</code> → <code>Enter</code> → <code>Ctrl+X</code></p>
-<p><strong>Step 17:</strong> Start Node Exporter.</p>
-<pre><code class="language-bash">sudo systemctl daemon-reload
-sudo systemctl enable node_exporter
-sudo systemctl start node_exporter
-sudo systemctl status node_exporter
-</code></pre>
-<p><em>Expected:</em> <code>Active: active (running)</code></p>
-<p><strong>Step 18:</strong> Browser → <code>http://localhost:9100/metrics</code>
-<em>Expected:</em> Large text page with metrics such as <code>node_cpu_seconds_total</code>, <code>node_memory_MemTotal_bytes</code>, <code>node_memory_MemAvailable_bytes</code>, <code>node_filesystem_size_bytes</code>, <code>node_network_receive_bytes_total</code>.</p>
-<p><strong>Step 19:</strong> Add Node Exporter to Prometheus.</p>
-<pre><code class="language-bash">sudo nano /etc/prometheus/prometheus.yml
-</code></pre>
-<pre><code class="language-yaml">global:
-  scrape_interval: 15s
-
-scrape_configs:
-
-  - job_name: &quot;prometheus&quot;
-    static_configs:
-      - targets: [&quot;localhost:9090&quot;]
-
-  - job_name: &quot;node_exporter&quot;
-    static_configs:
-      - targets: [&quot;localhost:9100&quot;]
-</code></pre>
-<p>Save: <code>Ctrl+O</code> → <code>Enter</code> → <code>Ctrl+X</code></p>
-<pre><code class="language-bash">promtool check config /etc/prometheus/prometheus.yml
-sudo systemctl restart prometheus
-sudo systemctl status prometheus
-</code></pre>
-<p><em>Expected:</em> Config valid; <code>Active: active (running)</code>.</p>
-<p><strong>Step 20:</strong> Open <code>http://localhost:9090</code> → <strong>Status → Targets</strong>.
-<em>Expected:</em> Two targets – <code>prometheus</code> (<code>localhost:9090</code>) and <code>node_exporter</code> (<code>localhost:9100</code>) – both <strong>UP</strong>.</p>
-<h2>Part C – Monitor CPU, Memory, Disk, Network</h2>
-<p><strong>Step 21:</strong> In the Prometheus query page, run these metrics and use the <strong>Graph</strong> view:</p>
-<table>
-<thead>
-<tr>
-<th>Resource</th>
-<th>Query</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CPU</td>
-<td><code>node_cpu_seconds_total</code></td>
-</tr>
-<tr>
-<td>Memory</td>
-<td><code>node_memory_MemAvailable_bytes</code> , <code>node_memory_MemTotal_bytes</code></td>
-</tr>
-<tr>
-<td>Disk</td>
-<td><code>node_filesystem_size_bytes</code></td>
-</tr>
-<tr>
-<td>Network</td>
-<td><code>node_network_receive_bytes_total</code> , <code>node_network_transmit_bytes_total</code></td>
-</tr>
-</tbody>
-</table>
-<p><em>Expected:</em> Time-series values shown and changing over time.</p>
-<h2>Part D – Grafana</h2>
-<p><strong>Step 22:</strong> Install Grafana (official Grafana repository/package for your Ubuntu version), then:</p>
-<pre><code class="language-bash">sudo systemctl enable grafana-server
-sudo systemctl start grafana-server
-sudo systemctl status grafana-server
-</code></pre>
-<p><em>Expected:</em> <code>Active: active (running)</code></p>
-<p><strong>Step 23:</strong> Browser → <code>http://localhost:3000</code> → login <code>admin</code> / <code>admin</code> (set new password if asked).
-<em>Expected:</em> Grafana home page.</p>
-<p><strong>Step 24:</strong> Connect data source.
-- <strong>Connections → Data Sources → Add data source</strong> → <strong>Prometheus</strong>
-- URL: <code>http://localhost:9090</code>
-- <strong>Save &amp; Test</strong></p>
-<p><em>Expected:</em> "Successfully queried the Prometheus API" / data source connected.</p>
-<p><strong>Step 25:</strong> Create dashboard: <strong>New Dashboard → Add Visualization</strong> → select <strong>Prometheus</strong>. Create 4 panels:</p>
-<table>
-<thead>
-<tr>
-<th>Panel</th>
-<th>Title</th>
-<th>Metrics to use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>CPU Utilization</td>
-<td>CPU metric (Time series or Gauge)</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Memory Utilization</td>
-<td>Node Exporter memory metrics</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Disk Utilization</td>
-<td>Filesystem metrics</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Network Traffic</td>
-<td>Network receive/transmit metrics</td>
-</tr>
-</tbody>
-</table>
-<p>Save dashboard as: <code>Linux System Monitoring</code></p>
-<p><em>Expected:</em> Dashboard with CPU, Memory, Disk, Network graphs; graphs change when you perform normal computer activity.</p>
-<h2>Part E – Nagios</h2>
-<p><strong>Step 26:</strong> Install Nagios.</p>
-<pre><code class="language-bash">sudo apt install -y nagios4 nagios-plugins-contrib nagios-nrpe-plugin apache2
-sudo systemctl status nagios4
-</code></pre>
-<p><em>Expected:</em> <code>Active: active (running)</code></p>
-<p><strong>Step 27:</strong> Create web admin user.</p>
-<pre><code class="language-bash">sudo htdigest -c /etc/nagios4/htdigest.users &quot;Nagios4&quot; nagiosadmin
-</code></pre>
-<p><em>Expected:</em> Prompts to enter and confirm password.</p>
-<p><strong>Step 28:</strong> Enable authentication.</p>
-<pre><code class="language-bash">sudo nano /etc/nagios4/cgi.cfg
-</code></pre>
-<p>Ensure:</p>
-<pre><code>use_authentication=1
-</code></pre>
-<p>Save: <code>Ctrl+O</code> → <code>Enter</code> → <code>Ctrl+X</code></p>
-<pre><code class="language-bash">sudo systemctl restart apache2
-</code></pre>
-<p><strong>Step 29:</strong> Configure host and services.</p>
-<pre><code class="language-bash">sudo nano /etc/nagios4/objects/localhost.cfg
-</code></pre>
-<p>Host block:</p>
-<pre><code>define host {
-    use         generic-host
-    host_name   Ubuntu-Server
-    alias       Ubuntu Local Host
-    address     127.0.0.1
-}
-</code></pre>
-<p>Services (add/verify at the bottom):</p>
-<pre><code>define service {
-    use                  generic-service
-    host_name            Ubuntu-Server
-    service_description  HTTP
-    check_command        check_http
-}
-
-define service {
-    use                  generic-service
-    host_name            Ubuntu-Server
-    service_description  SSH
-    check_command        check_ssh
-}
-
-define service {
-    use                  generic-service
-    host_name            Ubuntu-Server
-    service_description  Root Partition Disk
-    check_command        check_local_disk!-w 20% -c 10% -p /
-}
-</code></pre>
-<p>Save: <code>Ctrl+O</code> → <code>Enter</code> → <code>Ctrl+X</code></p>
-<p><strong>Step 30:</strong> Validate and restart.</p>
-<pre><code class="language-bash">sudo nagios4 -v /etc/nagios4/nagios.cfg
-sudo systemctl restart nagios4
-sudo systemctl status nagios4
-</code></pre>
-<p><em>Expected:</em> <code>Total Warnings: 0</code>, <code>Total Errors: 0</code>; service <code>active (running)</code>.</p>
-<p><strong>Step 31:</strong> Open dashboard.
-- Browser → <code>http://localhost/nagios4</code> (or <code>http://&lt;SERVER_IP&gt;/nagios4</code>)
-- Login: <code>nagiosadmin</code> + password from Step 27
-- Left pane → <strong>Hosts</strong> / <strong>Services</strong></p>
-<p><em>Expected:</em> <code>Ubuntu-Server</code> = <strong>UP</strong>; HTTP, SSH, Root Partition Disk = <strong>OK</strong> (green).</p>
-<p><strong>Step 32:</strong> Test 1 – HTTP alert (only on isolated lab VM).</p>
-<pre><code class="language-bash">sudo systemctl stop apache2
-</code></pre>
-<p>Refresh Nagios dashboard.
-<em>Expected:</em> HTTP: OK → <strong>CRITICAL</strong> (red).</p>
-<pre><code class="language-bash">sudo systemctl start apache2
-</code></pre>
-<p><em>Expected:</em> HTTP: CRITICAL → <strong>OK</strong>.</p>
-<p><strong>Step 33:</strong> Test 2 – SSH alert.</p>
-<pre><code class="language-bash">sudo systemctl stop ssh
-</code></pre>
-<p><em>Expected:</em> SSH: OK → <strong>CRITICAL</strong>.</p>
-<pre><code class="language-bash">sudo systemctl start ssh
-</code></pre>
-<p><em>Expected:</em> SSH restored to <strong>OK</strong>.</p>
-<hr />
-<p><a id="exp9"></a></p>
-<h1>Exp9 – Kubernetes on Ubuntu (Minikube)</h1>
-<h2>Part A – Prepare Ubuntu</h2>
-<p><strong>Step 1:</strong> Open terminal: <code>Ctrl + Alt + T</code></p>
-<p><strong>Step 2:</strong></p>
-<pre><code class="language-bash">sudo apt update
-</code></pre>
-<p><em>Expected:</em> Package lists refreshed.</p>
-<h2>Part B – Install Docker</h2>
-<p><strong>Step 3:</strong> Check Docker.</p>
-<pre><code class="language-bash">docker --version
-</code></pre>
-<p><em>Expected:</em> <code>Docker version 28.x.x</code> (if installed; otherwise continue).</p>
-<p><strong>Step 4:</strong> Install Docker.</p>
-<pre><code class="language-bash">sudo apt install docker.io -y
-</code></pre>
-<p><strong>Step 5:</strong></p>
-<pre><code class="language-bash">sudo systemctl start docker
-</code></pre>
-<p><strong>Step 6:</strong></p>
-<pre><code class="language-bash">sudo systemctl enable docker
-</code></pre>
-<p><strong>Step 7:</strong></p>
-<pre><code class="language-bash">sudo systemctl status docker
-</code></pre>
-<p><em>Expected:</em> <code>Active: active (running)</code>. Press <code>q</code> to exit.</p>
-<h2>Part C – Install kubectl</h2>
-<p><strong>Step 10:</strong></p>
-<pre><code class="language-bash">sudo snap install kubectl --classic
-</code></pre>
-<p><strong>Step 11:</strong></p>
-<pre><code class="language-bash">kubectl version --client
-</code></pre>
-<p><em>Expected:</em> <code>Client Version: v1.xx.x</code></p>
-<h2>Part D – Install Minikube</h2>
-<p><strong>Step 13:</strong></p>
-<pre><code class="language-bash">curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-</code></pre>
-<p><strong>Step 14:</strong></p>
-<pre><code class="language-bash">sudo install minikube-linux-amd64 /usr/local/bin/minikube
-</code></pre>
-<p><strong>Step 15:</strong></p>
-<pre><code class="language-bash">minikube version
-</code></pre>
-<p><em>Expected:</em> <code>minikube version: v...</code></p>
-<h2>Part E – Start Cluster</h2>
-<p><strong>Step 16:</strong></p>
-<pre><code class="language-bash">minikube start --driver=docker
-</code></pre>
-<p><em>Expected:</em> Cluster started successfully message (first run takes a few minutes).</p>
-<p><strong>Step 17:</strong></p>
-<pre><code class="language-bash">minikube status
-</code></pre>
-<p><em>Expected:</em></p>
-<pre><code>host: Running
-kubelet: Running
-apiserver: Running
-kubeconfig: Configured
-</code></pre>
-<h2>Part F – Check Cluster</h2>
-<p><strong>Step 18:</strong></p>
-<pre><code class="language-bash">kubectl cluster-info
-</code></pre>
-<p><em>Expected:</em> Kubernetes control plane URL displayed.</p>
-<p><strong>Step 19:</strong></p>
-<pre><code class="language-bash">kubectl get nodes
-</code></pre>
-<p><em>Expected:</em></p>
-<pre><code>NAME       STATUS   ROLES           AGE   VERSION
-minikube   Ready    control-plane   ...   ...
-</code></pre>
-<h2>Part G – Deploy Application</h2>
-<p><strong>Step 20:</strong> Create deployment.</p>
-<pre><code class="language-bash">kubectl create deployment nginx --image=nginx
-</code></pre>
-<p><em>Expected:</em> <code>deployment.apps/nginx created</code></p>
-<p><strong>Step 21:</strong></p>
-<pre><code class="language-bash">kubectl get deployments
-</code></pre>
-<p><em>Expected:</em></p>
-<pre><code>NAME    READY   UP-TO-DATE   AVAILABLE
-nginx   1/1     1            1
-</code></pre>
-<p><strong>Step 22:</strong></p>
-<pre><code class="language-bash">kubectl get pods
-</code></pre>
-<p><em>Expected:</em></p>
-<pre><code>NAME                     READY   STATUS    RESTARTS   AGE
-nginx-xxxxxxxxxx-xxxxx   1/1     Running   0          ...
-</code></pre>
-<p><strong>Step 23:</strong> Relationship (reference): Deployment → ReplicaSet → Pod → Nginx container.</p>
-<h2>Part H – Examine Pod</h2>
-<p><strong>Step 24:</strong></p>
-<pre><code class="language-bash">kubectl get pods
-kubectl describe pod &lt;pod-name&gt;
-</code></pre>
-<p>Example: <code>kubectl describe pod nginx-7c5ddbdf54-abcde</code>
-<em>Expected:</em> Pod name, namespace, node, container, image, IP, events, status.</p>
-<p><strong>Step 25:</strong></p>
-<pre><code class="language-bash">kubectl describe deployment nginx
-</code></pre>
-<p><em>Expected:</em> Deployment details.</p>
-<h2>Part I – Expose Application</h2>
-<p><strong>Step 26:</strong></p>
-<pre><code class="language-bash">kubectl expose deployment nginx --type=NodePort --port=80
-</code></pre>
-<p><em>Expected:</em> <code>service/nginx exposed</code></p>
-<p><strong>Step 27:</strong></p>
-<pre><code class="language-bash">kubectl get services
-</code></pre>
-<p><em>Expected:</em></p>
-<pre><code>NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)
-kubernetes   ClusterIP   ...          &lt;none&gt;        443/TCP
-nginx        NodePort    ...          &lt;none&gt;        80:xxxxx/TCP
-</code></pre>
-<h2>Part J – Access Application</h2>
-<p><strong>Step 28:</strong></p>
-<pre><code class="language-bash">minikube service nginx
-</code></pre>
-<p><em>Expected:</em> Service URL shown; browser opens with <strong>Welcome to nginx!</strong></p>
-<h2>Part K – Scale Up</h2>
-<p><strong>Step 30:</strong></p>
-<pre><code class="language-bash">kubectl get pods
-</code></pre>
-<p><em>Expected:</em> 1 Pod.</p>
-<p><strong>Step 31:</strong></p>
-<pre><code class="language-bash">kubectl scale deployment nginx --replicas=3
-</code></pre>
-<p><em>Expected:</em> <code>deployment.apps/nginx scaled</code></p>
-<p><strong>Step 32:</strong></p>
-<pre><code class="language-bash">kubectl get pods
-</code></pre>
-<p><em>Expected:</em> 3 Pods in <code>Running</code> state.</p>
-<h2>Part L – Scale Down</h2>
-<p><strong>Step 33:</strong></p>
-<pre><code class="language-bash">kubectl scale deployment nginx --replicas=2
-kubectl get pods
-</code></pre>
-<p><em>Expected:</em> 2 Pods.</p>
-<h2>Part M – Logs</h2>
-<p><strong>Step 34:</strong></p>
-<pre><code class="language-bash">kubectl get pods
-</code></pre>
-<p><strong>Step 35:</strong></p>
-<pre><code class="language-bash">kubectl logs &lt;pod-name&gt;
-</code></pre>
-<p>Example: <code>kubectl logs nginx-xxxxxxxxxx-xxxxx</code>
-<em>Expected:</em> Container log output (nginx startup messages).</p>
-<h2>Part N – Execute Command in Container</h2>
-<p><strong>Step 36:</strong></p>
-<pre><code class="language-bash">kubectl exec -it &lt;pod-name&gt; -- /bin/bash
-</code></pre>
-<p><em>Expected:</em> Prompt changes, e.g. <code>root@nginx-container:/#</code></p>
-<p><strong>Step 37:</strong> Inside the container:</p>
-<pre><code class="language-bash">ls
-pwd
-</code></pre>
-<p><em>Expected:</em> Root file system listing; <code>/</code></p>
-<p><strong>Step 38:</strong></p>
-<pre><code class="language-bash">exit
-</code></pre>
-<p><em>Expected:</em> Back to Ubuntu prompt.</p>
-<h2>Part O – Update Deployment</h2>
-<p><strong>Step 39:</strong></p>
-<pre><code class="language-bash">kubectl get deployment nginx -o wide
-</code></pre>
-<p><em>Expected:</em> Image column shows <code>nginx</code>.</p>
-<h2>Part P – Self-Healing</h2>
-<p><strong>Step 40:</strong></p>
-<pre><code class="language-bash">kubectl get pods
-</code></pre>
-<p><strong>Step 41:</strong></p>
-<pre><code class="language-bash">kubectl delete pod &lt;pod-name&gt;
-</code></pre>
-<p>Example: <code>kubectl delete pod nginx-xxxxxxxxxx-xxxxx</code>
-<em>Expected:</em> <code>pod "nginx-xxxxxxxxxx-xxxxx" deleted</code></p>
-<p><strong>Step 42:</strong></p>
-<pre><code class="language-bash">kubectl get pods
-</code></pre>
-<p><em>Expected:</em> A new Pod is created automatically; desired replica count maintained.</p>
-<h2>Part Q – All Resources</h2>
-<p><strong>Step 43:</strong></p>
-<pre><code class="language-bash">kubectl get all
-</code></pre>
-<p><em>Expected:</em> Pods, <code>service/nginx NodePort</code>, <code>deployment.apps/nginx 2/2</code>, <code>replicaset.apps/nginx-xxxxxxxx</code> (desired 2).</p>
-<h2>Part R – Dashboard</h2>
-<p><strong>Step 44:</strong></p>
-<pre><code class="language-bash">minikube dashboard
-</code></pre>
-<p><em>Expected:</em> Browser opens with Kubernetes dashboard (Nodes, Namespaces, Workloads, Services).</p>
-<h2>Part S – Clean Up</h2>
-<p><strong>Step 45:</strong></p>
-<pre><code class="language-bash">kubectl delete service nginx
-</code></pre>
-<p><em>Expected:</em> <code>service "nginx" deleted</code></p>
-<p><strong>Step 46:</strong></p>
-<pre><code class="language-bash">kubectl delete deployment nginx
-</code></pre>
-<p><em>Expected:</em> <code>deployment.apps "nginx" deleted</code></p>
-<p><strong>Step 47:</strong></p>
-<pre><code class="language-bash">kubectl get all
-</code></pre>
-<p><em>Expected:</em> Only <code>service/kubernetes</code> remains; nginx resources gone.</p>
-<h2>Part T – Stop Minikube</h2>
-<p><strong>Step 48:</strong></p>
-<pre><code class="language-bash">minikube stop
-</code></pre>
-<p><em>Expected:</em> Node stopped message.</p>
-<h2>Part U – (Optional) Delete Cluster</h2>
-<pre><code class="language-bash">minikube delete
-</code></pre>
-<p><em>Expected:</em> Minikube cluster removed.</p>
-<hr />
-<p><a id="exp10"></a></p>
-<h1>Exp10 – ML Lifecycle with MLflow</h1>
-<p><strong>Step 1:</strong> Create project folder and check tools.</p>
-<pre><code class="language-bash">mkdir mlflow_experiment
-cd mlflow_experiment
-python3 --version
-pip3 --version
-</code></pre>
-<p><em>Expected:</em> Python 3.x.x and pip version displayed.</p>
-<p><strong>Step 2:</strong> Create and activate virtual environment.</p>
-<pre><code class="language-bash">python3 -m venv venv
-source venv/bin/activate
-</code></pre>
-<p><em>Expected:</em> Prompt shows <code>(venv) user@ubuntu:~/mlflow_experiment$</code></p>
-<p><strong>Step 3:</strong> Install packages.</p>
-<pre><code class="language-bash">pip install mlflow scikit-learn pandas
-mlflow --version
-</code></pre>
-<p><em>Expected:</em> <code>mlflow, version x.x.x</code></p>
-<p><strong>Step 4:</strong> Start MLflow server in a <strong>second terminal</strong> (leave it open).</p>
-<pre><code class="language-bash">cd ~/mlflow_experiment
-source venv/bin/activate
-mlflow server --port 5000
-</code></pre>
-<p><em>Expected:</em> <code>Uvicorn running on http://127.0.0.1:5000</code></p>
-<p><strong>Step 5:</strong> Browser → <code>http://localhost:5000</code>
-<em>Expected:</em> MLflow UI opens.</p>
-<p><strong>Step 6:</strong> In the <strong>first terminal</strong>, create <code>train_model.py</code>.</p>
-<pre><code class="language-bash">nano train_model.py
-</code></pre>
-<pre><code class="language-python">import mlflow
-import mlflow.sklearn
+<section class="experiment-block" id="exp1">
+  <div class="exp-header">
+    <h2>Exp 1 – Exploratory Data Analysis (EDA) on Iris Dataset</h2>
+    <button class="copy-exp-btn" onclick="copyExp(this, 'code-exp1')">Copy Code</button>
+  </div>
+  <pre><code id="code-exp1"># Practical 1: Exploratory Data Analysis
+# Dataset: Iris Dataset
+# Import required libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-
-# Connect Python program to MLflow Tracking Server
-mlflow.set_tracking_uri(&quot;http://localhost:5000&quot;)
-
-# Create/select experiment
-mlflow.set_experiment(&quot;Iris_ML_Lifecycle&quot;)
-
 # Load Iris dataset
 iris = load_iris()
-X = iris.data
-y = iris.target
+# Convert dataset into DataFrame
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+# Add target column
+df[&quot;species&quot;] = iris.target
+# Convert numeric target values into species names
+df[&quot;species&quot;] = df[&quot;species&quot;].map({
+    0: &quot;setosa&quot;,
+    1: &quot;versicolor&quot;,
+    2: &quot;virginica&quot;
+})
+# Display first five rows
+print(&quot;First 5 rows of dataset:&quot;)
+print(df.head())
+# Display shape of dataset
+print(&quot;\nShape of dataset:&quot;)
+print(df.shape)
+# Display column names
+print(&quot;\nColumn names:&quot;)
+print(df.columns)
+# Display dataset information
+print(&quot;\nDataset information:&quot;)
+print(df.info())
+# Check missing values
+print(&quot;\nMissing values in each column:&quot;)
+print(df.isnull().sum())
+# Descriptive statistics
+print(&quot;\nDescriptive Statistics:&quot;)
+print(df.describe())
+# Mean of numerical columns
+print(&quot;\nMean of numerical columns:&quot;)
+print(df.mean(numeric_only=True))
+# Median of numerical columns
+print(&quot;\nMedian of numerical columns:&quot;)
+print(df.median(numeric_only=True))
+# Mode of all columns
+print(&quot;\nMode of dataset:&quot;)
+print(df.mode())
+# Standard deviation of numerical columns
+print(&quot;\nStandard Deviation:&quot;)
+print(df.std(numeric_only=True))
+# Minimum values
+print(&quot;\nMinimum values:&quot;)
+print(df.min(numeric_only=True))
+# Maximum values
+print(&quot;\nMaximum values:&quot;)
+print(df.max(numeric_only=True))
+# Count species values
+print(&quot;\nCount of each species:&quot;)
+print(df[&quot;species&quot;].value_counts())
+# Histogram for all numerical features
+df.hist(figsize=(10, 8))
+plt.suptitle(&quot;Histograms of Iris Dataset Features&quot;)
+plt.show()
+# Boxplot for numerical features
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=df.drop(&quot;species&quot;, axis=1))
+plt.title(&quot;Boxplot of Iris Dataset Features&quot;)
+plt.show()
+# Correlation matrix
+numeric_df = df.drop(&quot;species&quot;, axis=1)
+correlation_matrix = numeric_df.corr()
+print(&quot;\nCorrelation Matrix:&quot;)
+print(correlation_matrix)
+# Heatmap of correlation matrix
+plt.figure(figsize=(8, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap=&quot;coolwarm&quot;)
+plt.title(&quot;Correlation Matrix Heatmap&quot;)
+plt.show()
+# Pairplot
+sns.pairplot(df, hue=&quot;species&quot;)
+plt.show()
+# Final conclusion
+print(&quot;\nConclusion:&quot;)
+print(&quot;Exploratory Data Analysis was successfully performed on the Iris dataset.&quot;)
+print(&quot;Descriptive statistics, histograms, boxplots, correlation matrix, and pairplots were generated.&quot;)
+print(&quot;The dataset has no missing values.&quot;)
+print(&quot;Petal length and petal width show strong positive correlation.&quot;)
+print(&quot;Setosa species is easily separable from the other two species.&quot;)</code></pre>
+</section>
 
-# Divide data into training and testing data
+<section class="experiment-block" id="exp2">
+  <div class="exp-header">
+    <h2>Exp 2 – Data Preprocessing: Handling Missing Values, Encoding, Scaling &amp; Outliers</h2>
+    <button class="copy-exp-btn" onclick="copyExp(this, 'code-exp2')">Copy Code</button>
+  </div>
+  <pre><code id="code-exp2"># Experiment 2: Data Preprocessing
+# Missing values, encoding, scaling, and outlier detection
+# Step 1: Import required libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import LabelEncoder, StandardScaler, MinMaxScaler
+# Step 2: Create sample dataset
+# You can replace this part with: df = pd.read_csv(&quot;your_file.csv&quot;)
+data = {
+    &#x27;Name&#x27;: [&#x27;Amit&#x27;, &#x27;Riya&#x27;, &#x27;Sahil&#x27;, &#x27;Neha&#x27;, &#x27;Raj&#x27;, &#x27;Priya&#x27;, &#x27;Karan&#x27;, &#x27;Anjali&#x27;],
+    &#x27;Age&#x27;: [21, 22, np.nan, 24, 23, np.nan, 25, 100],
+    &#x27;Gender&#x27;: [&#x27;Male&#x27;, &#x27;Female&#x27;, &#x27;Male&#x27;, &#x27;Female&#x27;, np.nan, &#x27;Female&#x27;, &#x27;Male&#x27;, &#x27;Female&#x27;],
+    &#x27;City&#x27;: [&#x27;Mumbai&#x27;, &#x27;Pune&#x27;, &#x27;Delhi&#x27;, &#x27;Mumbai&#x27;, &#x27;Pune&#x27;, np.nan, &#x27;Delhi&#x27;, &#x27;Mumbai&#x27;],
+    &#x27;Salary&#x27;: [25000, 30000, 28000, np.nan, 35000, 32000, 31000, 150000]
+}
+df = pd.DataFrame(data)
+print(&quot;Original Dataset:&quot;)
+print(df)
+# Step 3: Check missing values
+print(&quot;\nMissing Values Before Preprocessing:&quot;)
+print(df.isnull().sum())
+# Step 4: Handle missing values
+# Fill missing numerical values with mean
+df[&#x27;Age&#x27;] = df[&#x27;Age&#x27;].fillna(df[&#x27;Age&#x27;].mean())
+df[&#x27;Salary&#x27;] = df[&#x27;Salary&#x27;].fillna(df[&#x27;Salary&#x27;].mean())
+# Fill missing categorical values with mode
+df[&#x27;Gender&#x27;] = df[&#x27;Gender&#x27;].fillna(df[&#x27;Gender&#x27;].mode()[0])
+df[&#x27;City&#x27;] = df[&#x27;City&#x27;].fillna(df[&#x27;City&#x27;].mode()[0])
+print(&quot;\nDataset After Handling Missing Values:&quot;)
+print(df)
+print(&quot;\nMissing Values After Preprocessing:&quot;)
+print(df.isnull().sum())
+# Step 5: Encode categorical data
+# Label Encoding for Gender
+le = LabelEncoder()
+df[&#x27;Gender&#x27;] = le.fit_transform(df[&#x27;Gender&#x27;])
+# One-Hot Encoding for City
+df = pd.get_dummies(df, columns=[&#x27;City&#x27;], drop_first=True)
+print(&quot;\nDataset After Encoding:&quot;)
+print(df)
+# Step 6: Scaling numerical data
+# Standardization using StandardScaler
+standard_scaler = StandardScaler()
+df[[&#x27;Age_Standardized&#x27;, &#x27;Salary_Standardized&#x27;]] = standard_scaler.fit_transform(
+    df[[&#x27;Age&#x27;, &#x27;Salary&#x27;]]
+)
+# Normalization using MinMaxScaler
+minmax_scaler = MinMaxScaler()
+df[[&#x27;Age_Normalized&#x27;, &#x27;Salary_Normalized&#x27;]] = minmax_scaler.fit_transform(
+    df[[&#x27;Age&#x27;, &#x27;Salary&#x27;]]
+)
+print(&quot;\nDataset After Scaling:&quot;)
+print(df)
+# Step 7: Outlier detection using Boxplot
+plt.figure(figsize=(6, 4))
+plt.boxplot(df[&#x27;Salary&#x27;])
+plt.title(&quot;Boxplot for Salary&quot;)
+plt.ylabel(&quot;Salary&quot;)
+plt.show()
+# Step 8: Outlier detection using IQR method
+Q1 = df[&#x27;Salary&#x27;].quantile(0.25)
+Q3 = df[&#x27;Salary&#x27;].quantile(0.75)
+IQR = Q3 - Q1
+lower_limit = Q1 - 1.5 * IQR
+upper_limit = Q3 + 1.5 * IQR
+print(&quot;\nQ1:&quot;, Q1)
+print(&quot;Q3:&quot;, Q3)
+print(&quot;IQR:&quot;, IQR)
+print(&quot;Lower Limit:&quot;, lower_limit)
+print(&quot;Upper Limit:&quot;, upper_limit)
+outliers = df[(df[&#x27;Salary&#x27;] &lt; lower_limit) | (df[&#x27;Salary&#x27;] &gt; upper_limit)]
+print(&quot;\nDetected Outliers:&quot;)
+print(outliers)
+# Step 9: Remove outliers
+df_no_outliers = df[
+    (df[&#x27;Salary&#x27;] &gt;= lower_limit) &amp;
+    (df[&#x27;Salary&#x27;] &lt;= upper_limit)
+]
+print(&quot;\nDataset After Removing Outliers:&quot;)
+print(df_no_outliers)
+# Step 10: Final result
+print(&quot;\nFinal Preprocessed Dataset:&quot;)
+print(df_no_outliers)
+print(&quot;\nExperiment Completed Successfully.&quot;)</code></pre>
+</section>
+
+<section class="experiment-block" id="exp3">
+  <div class="exp-header">
+    <h2>Exp 3 – Sampling Methods: Simple Random, Stratified &amp; Cluster Sampling</h2>
+    <button class="copy-exp-btn" onclick="copyExp(this, 'code-exp3')">Copy Code</button>
+  </div>
+  <pre><code id="code-exp3"># Experiment 3: Sampling Methods
+# Simple Random Sampling, Stratified Sampling, and Cluster Sampling
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+# Load Iris dataset
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df[&quot;species&quot;] = iris.target
+df[&quot;species&quot;] = df[&quot;species&quot;].map({
+    0: &quot;setosa&quot;,
+    1: &quot;versicolor&quot;,
+    2: &quot;virginica&quot;
+})
+print(&quot;Original Dataset:&quot;)
+print(df.head())
+print(&quot;\nShape of Original Dataset:&quot;)
+print(df.shape)
+print(&quot;\nSpecies Count in Original Dataset:&quot;)
+print(df[&quot;species&quot;].value_counts())
+# -------------------------------
+# 1. Simple Random Sampling
+# -------------------------------
+simple_random_sample = df.sample(n=20, random_state=42)
+print(&quot;\nSimple Random Sample:&quot;)
+print(simple_random_sample)
+print(&quot;\nSpecies Count in Simple Random Sample:&quot;)
+print(simple_random_sample[&quot;species&quot;].value_counts())
+# -------------------------------
+# 2. Stratified Sampling
+# -------------------------------
+stratified_sample = df.groupby(&quot;species&quot;, group_keys=False).apply(
+    lambda x: x.sample(frac=0.3, random_state=42)
+)
+print(&quot;\nStratified Sample:&quot;)
+print(stratified_sample)
+print(&quot;\nSpecies Count in Stratified Sample:&quot;)
+print(stratified_sample[&quot;species&quot;].value_counts())
+# -------------------------------
+# 3. Cluster Sampling
+# -------------------------------
+clusters = df[&quot;species&quot;].unique()
+np.random.seed(42)
+selected_cluster = np.random.choice(clusters, size=1)
+cluster_sample = df[df[&quot;species&quot;].isin(selected_cluster)]
+print(&quot;\nSelected Cluster:&quot;)
+print(selected_cluster)
+print(&quot;\nCluster Sample:&quot;)
+print(cluster_sample)
+print(&quot;\nSpecies Count in Cluster Sample:&quot;)
+print(cluster_sample[&quot;species&quot;].value_counts())
+# -------------------------------
+# Visual 1: Species Distribution
+# -------------------------------
+plt.figure(figsize=(8, 5))
+df[&quot;species&quot;].value_counts().plot(kind=&quot;bar&quot;)
+plt.title(&quot;Species Distribution in Original Dataset&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.show()
+plt.figure(figsize=(8, 5))
+simple_random_sample[&quot;species&quot;].value_counts().plot(kind=&quot;bar&quot;)
+plt.title(&quot;Species Distribution in Simple Random Sample&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.show()
+plt.figure(figsize=(8, 5))
+stratified_sample[&quot;species&quot;].value_counts().plot(kind=&quot;bar&quot;)
+plt.title(&quot;Species Distribution in Stratified Sample&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.show()
+plt.figure(figsize=(8, 5))
+cluster_sample[&quot;species&quot;].value_counts().plot(kind=&quot;bar&quot;)
+plt.title(&quot;Species Distribution in Cluster Sample&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.show()
+# -------------------------------
+# Visual 2: Scatter Plot of Original Dataset
+# -------------------------------
+plt.figure(figsize=(8, 6))
+for species in df[&quot;species&quot;].unique():
+    subset = df[df[&quot;species&quot;] == species]
+    plt.scatter(
+        subset[&quot;sepal length (cm)&quot;],
+        subset[&quot;petal length (cm)&quot;],
+        label=species
+    )
+plt.title(&quot;Original Dataset: Sepal Length vs Petal Length&quot;)
+plt.xlabel(&quot;Sepal Length&quot;)
+plt.ylabel(&quot;Petal Length&quot;)
+plt.legend()
+plt.show()
+# -------------------------------
+# Visual 3: Scatter Plot of Simple Random Sample
+# -------------------------------
+plt.figure(figsize=(8, 6))
+for species in simple_random_sample[&quot;species&quot;].unique():
+    subset = simple_random_sample[simple_random_sample[&quot;species&quot;] == species]
+    plt.scatter(
+        subset[&quot;sepal length (cm)&quot;],
+        subset[&quot;petal length (cm)&quot;],
+        label=species
+    )
+plt.title(&quot;Simple Random Sample: Sepal Length vs Petal Length&quot;)
+plt.xlabel(&quot;Sepal Length&quot;)
+plt.ylabel(&quot;Petal Length&quot;)
+plt.legend()
+plt.show()
+# -------------------------------
+# Visual 4: Scatter Plot of Stratified Sample
+# -------------------------------
+plt.figure(figsize=(8, 6))
+for species in stratified_sample[&quot;species&quot;].unique():
+    subset = stratified_sample[stratified_sample[&quot;species&quot;] == species]
+    plt.scatter(
+        subset[&quot;sepal length (cm)&quot;],
+        subset[&quot;petal length (cm)&quot;],
+        label=species
+    )
+plt.title(&quot;Stratified Sample: Sepal Length vs Petal Length&quot;)
+plt.xlabel(&quot;Sepal Length&quot;)
+plt.ylabel(&quot;Petal Length&quot;)
+plt.legend()
+plt.show()
+# -------------------------------
+# Visual 5: Scatter Plot of Cluster Sample
+# -------------------------------
+plt.figure(figsize=(8, 6))
+for species in cluster_sample[&quot;species&quot;].unique():
+    subset = cluster_sample[cluster_sample[&quot;species&quot;] == species]
+    plt.scatter(
+        subset[&quot;sepal length (cm)&quot;],
+        subset[&quot;petal length (cm)&quot;],
+        label=species
+    )
+plt.title(&quot;Cluster Sample: Sepal Length vs Petal Length&quot;)
+plt.xlabel(&quot;Sepal Length&quot;)
+plt.ylabel(&quot;Petal Length&quot;)
+plt.legend()
+plt.show()
+# -------------------------------
+# Final Comparison
+# -------------------------------
+print(&quot;\nComparison of Sampling Methods:&quot;)
+print(&quot;Original Dataset Size:&quot;, df.shape[0])
+print(&quot;Simple Random Sample Size:&quot;, simple_random_sample.shape[0])
+print(&quot;Stratified Sample Size:&quot;, stratified_sample.shape[0])
+print(&quot;Cluster Sample Size:&quot;, cluster_sample.shape[0])
+print(&quot;\nConclusion:&quot;)
+print(&quot;Simple Random Sampling randomly selects records from the dataset.&quot;)
+print(&quot;Stratified Sampling maintains representation from each species group.&quot;)
+print(&quot;Cluster Sampling selects all records from one selected species cluster.&quot;)
+print(&quot;Visualizations help compare how each sampling method represents the dataset.&quot;)</code></pre>
+</section>
+
+<section class="experiment-block" id="exp4">
+  <div class="exp-header">
+    <h2>Exp 4 – Demonstration of Central Limit Theorem using Simulations</h2>
+    <button class="copy-exp-btn" onclick="copyExp(this, 'code-exp4')">Copy Code</button>
+  </div>
+  <pre><code id="code-exp4"># Experiment 4: Demonstration of Central Limit Theorem using Simulations
+import numpy as np
+import matplotlib.pyplot as plt
+# Step 1: Create a non-normal population
+np.random.seed(42)
+population = np.random.exponential(scale=2, size=10000)
+# Step 2: Plot original population distribution
+plt.figure(figsize=(8, 5))
+plt.hist(population, bins=50, edgecolor=&#x27;black&#x27;)
+plt.title(&quot;Original Population Distribution&quot;)
+plt.xlabel(&quot;Value&quot;)
+plt.ylabel(&quot;Frequency&quot;)
+plt.show()
+# Step 3: Function to generate sample means
+def generate_sample_means(population, sample_size, number_of_samples):
+    sample_means = []
+    for i in range(number_of_samples):
+        sample = np.random.choice(population, size=sample_size, replace=True)
+        sample_means.append(np.mean(sample))
+    return sample_means
+# Step 4: Generate sample means for different sample sizes
+sample_sizes = [5, 30, 50]
+number_of_samples = 1000
+for size in sample_sizes:
+    sample_means = generate_sample_means(population, size, number_of_samples)
+    plt.figure(figsize=(8, 5))
+    plt.hist(sample_means, bins=30, edgecolor=&#x27;black&#x27;)
+    plt.title(f&quot;Distribution of Sample Means, Sample Size = {size}&quot;)
+    plt.xlabel(&quot;Sample Mean&quot;)
+    plt.ylabel(&quot;Frequency&quot;)
+    plt.show()
+    print(f&quot;\nSample Size: {size}&quot;)
+    print(&quot;Mean of Sample Means:&quot;, np.mean(sample_means))
+    print(&quot;Standard Deviation of Sample Means:&quot;, np.std(sample_means))
+# Step 5: Final conclusion
+print(&quot;\nConclusion:&quot;)
+print(&quot;The original population follows a non-normal exponential distribution.&quot;)
+print(&quot;As the sample size increases, the distribution of sample means becomes more normal.&quot;)
+print(&quot;This demonstrates the Central Limit Theorem.&quot;)</code></pre>
+</section>
+
+<section class="experiment-block" id="exp5">
+  <div class="exp-header">
+    <h2>Exp 5 – Hypothesis Testing: t-test, Chi-square Test &amp; ANOVA</h2>
+    <button class="copy-exp-btn" onclick="copyExp(this, 'code-exp5')">Copy Code</button>
+  </div>
+  <pre><code id="code-exp5"># Experiment 5: Hypothesis Testing
+# t-test, Chi-square test, and ANOVA on Iris Dataset
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from scipy.stats import ttest_ind, chi2_contingency, f_oneway
+# Significance level
+alpha = 0.05
+# Function to explain hypothesis decision
+def explain_decision(p_value, alpha):
+    print(&quot;\nDecision Explanation:&quot;)
+    if p_value &lt; alpha:
+        print(f&quot;Since the p-value ({p_value:.6f}) is less than the significance level {alpha},&quot;)
+        print(&quot;we reject the Null Hypothesis H0.&quot;)
+        print(&quot;This means the result is statistically significant.&quot;)
+        print(&quot;So, there is enough evidence to support the Alternative Hypothesis H1.&quot;)
+    else:
+        print(f&quot;Since the p-value ({p_value:.6f}) is greater than or equal to the significance level {alpha},&quot;)
+        print(&quot;we fail to reject the Null Hypothesis H0.&quot;)
+        print(&quot;This means the result is not statistically significant.&quot;)
+        print(&quot;So, there is not enough evidence to support the Alternative Hypothesis H1.&quot;)
+# Step 1: Load Iris dataset
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df[&quot;species&quot;] = iris.target
+df[&quot;species&quot;] = df[&quot;species&quot;].map({
+    0: &quot;setosa&quot;,
+    1: &quot;versicolor&quot;,
+    2: &quot;virginica&quot;
+})
+print(&quot;First 5 rows of Iris Dataset:&quot;)
+print(df.head())
+print(&quot;\nSpecies Count:&quot;)
+print(df[&quot;species&quot;].value_counts())
+# ---------------------------------------------------
+# Test 1: Independent t-test
+# ---------------------------------------------------
+# Comparing petal length of versicolor and virginica
+versicolor = df[df[&quot;species&quot;] == &quot;versicolor&quot;][&quot;petal length (cm)&quot;]
+virginica = df[df[&quot;species&quot;] == &quot;virginica&quot;][&quot;petal length (cm)&quot;]
+t_stat, p_value = ttest_ind(versicolor, virginica)
+print(&quot;\n--- Independent t-test ---&quot;)
+print(&quot;\nPurpose:&quot;)
+print(&quot;To compare the mean petal length of versicolor and virginica species.&quot;)
+print(&quot;\nNull Hypothesis H0:&quot;)
+print(&quot;Mean petal length of versicolor and virginica is equal.&quot;)
+print(&quot;\nAlternative Hypothesis H1:&quot;)
+print(&quot;Mean petal length of versicolor and virginica is different.&quot;)
+print(&quot;\nT-statistic:&quot;, t_stat)
+print(&quot;P-value:&quot;, p_value)
+explain_decision(p_value, alpha)
+if p_value &lt; alpha:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;There is a significant difference in mean petal length between versicolor and virginica.&quot;)
+else:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;There is no significant difference in mean petal length between versicolor and virginica.&quot;)
+# Visual for t-test
+plt.figure(figsize=(7, 5))
+plt.boxplot(
+    [versicolor, virginica],
+    labels=[&quot;Versicolor&quot;, &quot;Virginica&quot;]
+)
+plt.title(&quot;T-test: Petal Length Comparison&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Petal Length (cm)&quot;)
+plt.text(
+    1.2,
+    max(max(versicolor), max(virginica)) - 0.2,
+    f&quot;p-value = {p_value:.6f}&quot;,
+    fontsize=10
+)
+plt.show()
+# ---------------------------------------------------
+# Test 2: Chi-square test
+# ---------------------------------------------------
+# Checking relationship between species and sepal length category
+df[&quot;sepal_length_category&quot;] = pd.cut(
+    df[&quot;sepal length (cm)&quot;],
+    bins=2,
+    labels=[&quot;Short&quot;, &quot;Long&quot;]
+)
+contingency_table = pd.crosstab(df[&quot;species&quot;], df[&quot;sepal_length_category&quot;])
+chi2_stat, chi2_p, dof, expected = chi2_contingency(contingency_table)
+print(&quot;\n--- Chi-square Test ---&quot;)
+print(&quot;\nPurpose:&quot;)
+print(&quot;To check whether species and sepal length category are related.&quot;)
+print(&quot;\nNull Hypothesis H0:&quot;)
+print(&quot;Species and sepal length category are independent.&quot;)
+print(&quot;\nAlternative Hypothesis H1:&quot;)
+print(&quot;Species and sepal length category are dependent.&quot;)
+print(&quot;\nContingency Table:&quot;)
+print(contingency_table)
+print(&quot;\nChi-square Statistic:&quot;, chi2_stat)
+print(&quot;P-value:&quot;, chi2_p)
+print(&quot;Degrees of Freedom:&quot;, dof)
+print(&quot;\nExpected Frequencies:&quot;)
+print(expected)
+explain_decision(chi2_p, alpha)
+if chi2_p &lt; alpha:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;Species and sepal length category are dependent.&quot;)
+else:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;Species and sepal length category are independent.&quot;)
+# Visual for chi-square test
+contingency_table.plot(kind=&quot;bar&quot;, figsize=(8, 5))
+plt.title(&quot;Chi-square Test: Species vs Sepal Length Category&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.legend(title=&quot;Sepal Length Category&quot;)
+plt.show()
+# ---------------------------------------------------
+# Test 3: One-way ANOVA
+# ---------------------------------------------------
+# Comparing sepal length among all three species
+setosa_sepal = df[df[&quot;species&quot;] == &quot;setosa&quot;][&quot;sepal length (cm)&quot;]
+versicolor_sepal = df[df[&quot;species&quot;] == &quot;versicolor&quot;][&quot;sepal length (cm)&quot;]
+virginica_sepal = df[df[&quot;species&quot;] == &quot;virginica&quot;][&quot;sepal length (cm)&quot;]
+f_stat, anova_p = f_oneway(setosa_sepal, versicolor_sepal, virginica_sepal)
+print(&quot;\n--- One-way ANOVA ---&quot;)
+print(&quot;\nPurpose:&quot;)
+print(&quot;To compare the mean sepal length among setosa, versicolor, and virginica species.&quot;)
+print(&quot;\nNull Hypothesis H0:&quot;)
+print(&quot;Mean sepal length of all three species is equal.&quot;)
+print(&quot;\nAlternative Hypothesis H1:&quot;)
+print(&quot;At least one species has a different mean sepal length.&quot;)
+print(&quot;\nF-statistic:&quot;, f_stat)
+print(&quot;P-value:&quot;, anova_p)
+explain_decision(anova_p, alpha)
+if anova_p &lt; alpha:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;There is a significant difference in mean sepal length among the three species.&quot;)
+else:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;There is no significant difference in mean sepal length among the three species.&quot;)
+# Visual for ANOVA
+plt.figure(figsize=(8, 5))
+plt.boxplot(
+    [setosa_sepal, versicolor_sepal, virginica_sepal],
+    labels=[&quot;Setosa&quot;, &quot;Versicolor&quot;, &quot;Virginica&quot;]
+)
+plt.title(&quot;ANOVA: Sepal Length Comparison Among Species&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Sepal Length (cm)&quot;)
+plt.text(
+    1.2,
+    max(df[&quot;sepal length (cm)&quot;]) - 0.2,
+    f&quot;p-value = {anova_p:.6f}&quot;,
+    fontsize=10
+)
+plt.show()
+# ---------------------------------------------------
+# Final Summary
+# ---------------------------------------------------
+print(&quot;\nOverall Conclusion:&quot;)
+print(&quot;Hypothesis testing was successfully performed using t-test, chi-square test, and ANOVA.&quot;)
+print(&quot;Visualizations helped compare the groups clearly.&quot;)
+print(&quot;The decision for each test was made by comparing the p-value with the significance level 0.05.&quot;)
+print(&quot;\nImportant Rule:&quot;)
+print(&quot;If p-value &lt; 0.05, reject H0.&quot;)
+print(&quot;If p-value &gt;= 0.05, fail to reject H0.&quot;)
+print(&quot;We do not say &#x27;accept H0&#x27;; we say &#x27;fail to reject H0&#x27;.&quot;)</code></pre>
+</section>
+
+<section class="experiment-block" id="exp6">
+  <div class="exp-header">
+    <h2>Exp 6 – Bootstrap Confidence Intervals and Permutation Tests</h2>
+    <button class="copy-exp-btn" onclick="copyExp(this, 'code-exp6')">Copy Code</button>
+  </div>
+  <pre><code id="code-exp6"># Experiment 6: Bootstrap Confidence Intervals and Permutation Tests
+# Dataset: Iris Dataset
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+# Set random seed
+np.random.seed(42)
+# Significance level
+alpha = 0.05
+# Step 1: Load Iris dataset
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df[&quot;species&quot;] = iris.target
+df[&quot;species&quot;] = df[&quot;species&quot;].map({
+    0: &quot;setosa&quot;,
+    1: &quot;versicolor&quot;,
+    2: &quot;virginica&quot;
+})
+print(&quot;First 5 rows of Iris Dataset:&quot;)
+print(df.head())
+print(&quot;\nSpecies Count:&quot;)
+print(df[&quot;species&quot;].value_counts())
+# ---------------------------------------------------
+# Part A: Bootstrap Confidence Interval
+# ---------------------------------------------------
+print(&quot;\n--- Bootstrap Confidence Interval ---&quot;)
+data = df[&quot;petal length (cm)&quot;]
+n_bootstrap = 1000
+bootstrap_means = []
+for i in range(n_bootstrap):
+    bootstrap_sample = np.random.choice(data, size=len(data), replace=True)
+    bootstrap_means.append(np.mean(bootstrap_sample))
+bootstrap_means = np.array(bootstrap_means)
+lower_limit = np.percentile(bootstrap_means, 2.5)
+upper_limit = np.percentile(bootstrap_means, 97.5)
+print(&quot;\nOriginal Mean Petal Length:&quot;, np.mean(data))
+print(&quot;95% Bootstrap Confidence Interval:&quot;)
+print(&quot;Lower Limit:&quot;, lower_limit)
+print(&quot;Upper Limit:&quot;, upper_limit)
+print(&quot;\nExplanation:&quot;)
+print(&quot;Bootstrap sampling creates many samples from the original data with replacement.&quot;)
+print(&quot;The mean is calculated for each bootstrap sample.&quot;)
+print(&quot;The 2.5th and 97.5th percentiles give the 95% confidence interval.&quot;)
+# Visual: Bootstrap Distribution
+plt.figure(figsize=(8, 5))
+plt.hist(bootstrap_means, bins=30, edgecolor=&quot;black&quot;)
+plt.axvline(lower_limit, linestyle=&quot;--&quot;, label=&quot;Lower 95% CI&quot;)
+plt.axvline(upper_limit, linestyle=&quot;--&quot;, label=&quot;Upper 95% CI&quot;)
+plt.axvline(np.mean(data), linestyle=&quot;-&quot;, label=&quot;Original Mean&quot;)
+plt.title(&quot;Bootstrap Distribution of Mean Petal Length&quot;)
+plt.xlabel(&quot;Bootstrap Sample Mean&quot;)
+plt.ylabel(&quot;Frequency&quot;)
+plt.legend()
+plt.show()
+# ---------------------------------------------------
+# Part B: Permutation Test
+# ---------------------------------------------------
+print(&quot;\n--- Permutation Test ---&quot;)
+versicolor = df[df[&quot;species&quot;] == &quot;versicolor&quot;][&quot;petal length (cm)&quot;].values
+virginica = df[df[&quot;species&quot;] == &quot;virginica&quot;][&quot;petal length (cm)&quot;].values
+observed_difference = np.mean(virginica) - np.mean(versicolor)
+print(&quot;\nPurpose:&quot;)
+print(&quot;To test whether there is a significant difference in mean petal length between versicolor and virginica.&quot;)
+print(&quot;between versicolor and virginica species.&quot;)
+print(&quot;\nNull Hypothesis H0:&quot;)
+print(&quot;There is no difference in mean petal length between versicolor and virginica.&quot;)
+print(&quot;\nAlternative Hypothesis H1:&quot;)
+print(&quot;There is a significant difference in mean petal length between versicolor and virginica.&quot;)
+print(&quot;\nObserved Difference in Means:&quot;, observed_difference)
+combined = np.concatenate([versicolor, virginica])
+n_permutations = 1000
+permutation_differences = []
+for i in range(n_permutations):
+    np.random.shuffle(combined)
+    new_group1 = combined[:len(versicolor)]
+    new_group2 = combined[len(versicolor):]
+    diff = np.mean(new_group2) - np.mean(new_group1)
+    permutation_differences.append(diff)
+permutation_differences = np.array(permutation_differences)
+p_value = np.mean(np.abs(permutation_differences) &gt;= abs(observed_difference))
+print(&quot;\nPermutation Test P-value:&quot;, p_value)
+print(&quot;\nDecision Explanation:&quot;)
+if p_value &lt; alpha:
+    print(f&quot;Since the p-value ({p_value}) is less than the significance level {alpha},&quot;)
+    print(&quot;we reject the Null Hypothesis H0.&quot;)
+    print(&quot;This means the difference in mean petal length is statistically significant.&quot;)
+    print(&quot;There is enough evidence to support the Alternative Hypothesis H1.&quot;)
+else:
+    print(f&quot;Since the p-value ({p_value}) is greater than or equal to the significance level {alpha},&quot;)
+    print(&quot;we fail to reject the Null Hypothesis H0.&quot;)
+    print(&quot;This means the difference in mean petal length is not statistically significant.&quot;)
+    print(&quot;There is not enough evidence to support the Alternative Hypothesis H1.&quot;)
+# Visual: Permutation Distribution
+plt.figure(figsize=(8, 5))
+plt.hist(permutation_differences, bins=30, edgecolor=&quot;black&quot;)
+plt.axvline(observed_difference, linestyle=&quot;--&quot;, label=&quot;Observed Difference&quot;)
+plt.axvline(-observed_difference, linestyle=&quot;--&quot;, label=&quot;Negative Observed Difference&quot;)
+plt.title(&quot;Permutation Test Distribution&quot;)
+plt.xlabel(&quot;Difference in Means&quot;)
+plt.ylabel(&quot;Frequency&quot;)
+plt.legend()
+plt.show()
+# ---------------------------------------------------
+# Final Conclusion
+# ---------------------------------------------------
+print(&quot;\nFinal Conclusion:&quot;)
+print(&quot;Bootstrap confidence interval was used to estimate the mean petal length.&quot;)
+print(&quot;Permutation test was used to compare petal length between versicolor and virginica.&quot;)
+print(&quot;The decision was made by comparing the p-value with the significance level 0.05.&quot;)
+print(&quot;Experiment completed successfully.&quot;)</code></pre>
+</section>
+
+<section class="experiment-block" id="exp7">
+  <div class="exp-header">
+    <h2>Exp 7 – Maximum Likelihood Estimation (MLE) for Normal &amp; Bernoulli Distributions</h2>
+    <button class="copy-exp-btn" onclick="copyExp(this, 'code-exp7')">Copy Code</button>
+  </div>
+  <pre><code id="code-exp7"># Experiment 7: MLE Estimation for Normal and Bernoulli Distributions
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+# Set random seed
+np.random.seed(42)
+# ---------------------------------------------------
+# Part A: MLE for Normal Distribution
+# ---------------------------------------------------
+print(&quot;--- MLE for Normal Distribution ---&quot;)
+# Create sample numerical data
+normal_data = np.random.normal(loc=50, scale=10, size=100)
+print(&quot;\nSample Normal Data:&quot;)
+print(normal_data[:10])
+# MLE estimation
+mle_mean = np.mean(normal_data)
+mle_variance = np.mean((normal_data - mle_mean) ** 2)
+mle_std = np.sqrt(mle_variance)
+print(&quot;\nMLE Estimated Mean:&quot;, mle_mean)
+print(&quot;MLE Estimated Variance:&quot;, mle_variance)
+print(&quot;MLE Estimated Standard Deviation:&quot;, mle_std)
+print(&quot;\nExplanation:&quot;)
+print(&quot;For a Normal distribution, MLE estimates the mean as the sample average and&quot;)
+print(&quot;The variance is estimated as the average squared difference from the mean.&quot;)
+# Visualization of Normal Distribution
+x = np.linspace(min(normal_data), max(normal_data), 100)
+pdf = norm.pdf(x, mle_mean, mle_std)
+plt.figure(figsize=(8, 5))
+plt.hist(normal_data, bins=15, density=True, edgecolor=&quot;black&quot;, alpha=0.7)
+plt.plot(x, pdf, linewidth=2)
+plt.title(&quot;MLE Fitted Normal Distribution&quot;)
+plt.xlabel(&quot;Values&quot;)
+plt.ylabel(&quot;Density&quot;)
+plt.show()
+# ---------------------------------------------------
+# Part B: MLE for Bernoulli Distribution
+# ---------------------------------------------------
+print(&quot;\n--- MLE for Bernoulli Distribution ---&quot;)
+# Create binary data
+# 1 = Success, 0 = Failure
+bernoulli_data = np.array([
+    1, 0, 1, 1, 0,
+    1, 0, 1, 1, 1,
+    0, 1, 0, 1, 1,
+    0, 1, 1, 0, 1
+])
+print(&quot;\nBernoulli Data:&quot;)
+print(bernoulli_data)
+# MLE estimation
+successes = np.sum(bernoulli_data)
+total_trials = len(bernoulli_data)
+mle_p = successes / total_trials
+print(&quot;\nNumber of Successes:&quot;, successes)
+print(&quot;Total Trials:&quot;, total_trials)
+print(&quot;MLE Estimated Probability of Success:&quot;, mle_p)
+print(&quot;\nExplanation:&quot;)
+print(&quot;For a Bernoulli distribution, MLE estimates the probability of success&quot;)
+print(&quot;as the number of successes divided by the total number of trials.&quot;)
+# Visualization of Bernoulli Distribution
+labels = [&quot;Failure (0)&quot;, &quot;Success (1)&quot;]
+counts = [
+    np.sum(bernoulli_data == 0),
+    np.sum(bernoulli_data == 1)
+]
+plt.figure(figsize=(6, 5))
+plt.bar(labels, counts, edgecolor=&quot;black&quot;)
+plt.title(&quot;Bernoulli Distribution&quot;)
+plt.xlabel(&quot;Outcome&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.show()
+# ---------------------------------------------------
+# Final Conclusion
+# ---------------------------------------------------
+print(&quot;\nFinal Conclusion:&quot;)
+print(&quot;Maximum Likelihood Estimation was successfully applied.&quot;)
+print(&quot;For the Normal distribution, mean and variance were estimated.&quot;)
+print(&quot;For the Bernoulli distribution, probability of success was estimated.&quot;)
+print(&quot;Experiment completed successfully.&quot;)</code></pre>
+</section>
+
+<section class="experiment-block" id="exp8">
+  <div class="exp-header">
+    <h2>Exp 8 – Linear Regression and Diagnostics (VIF, Residuals, Cook&#x27;s Distance)</h2>
+    <button class="copy-exp-btn" onclick="copyExp(this, 'code-exp8')">Copy Code</button>
+  </div>
+  <pre><code id="code-exp8"># Experiment 8: Linear Regression and Diagnostics
+# VIF, Residual Plots, Cook&#x27;s Distance
+# Import required libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_diabetes
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import statsmodels.api as sm
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+# ---------------------------------------------------
+# Step 1: Load Dataset
+# ---------------------------------------------------
+diabetes = load_diabetes()
+df = pd.DataFrame(diabetes.data, columns=diabetes.feature_names)
+df[&quot;target&quot;] = diabetes.target
+print(&quot;First 5 rows of dataset:&quot;)
+print(df.head())
+print(&quot;\nShape of dataset:&quot;)
+print(df.shape)
+print(&quot;\nDataset information:&quot;)
+print(df.info())
+print(&quot;\nDescriptive Statistics:&quot;)
+print(df.describe())
+# ---------------------------------------------------
+# Step 2: Define Independent and Dependent Variables
+# ---------------------------------------------------
+X = df.drop(&quot;target&quot;, axis=1)
+y = df[&quot;target&quot;]
+print(&quot;\nIndependent Variables:&quot;)
+print(X.head())
+print(&quot;\nDependent Variable:&quot;)
+print(y.head())
+# ---------------------------------------------------
+# Step 3: Train-Test Split
+# ---------------------------------------------------
 X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
+    X, y, test_size=0.2, random_state=42
+)
+print(&quot;\nTraining data size:&quot;, X_train.shape)
+print(&quot;Testing data size:&quot;, X_test.shape)
+# ---------------------------------------------------
+# Step 4: Train Linear Regression Model
+# ---------------------------------------------------
+model = LinearRegression()
+model.fit(X_train, y_train)
+print(&quot;\nModel Coefficients:&quot;)
+for feature, coef in zip(X.columns, model.coef_):
+    print(feature, &quot;:&quot;, coef)
+print(&quot;\nIntercept:&quot;, model.intercept_)
+# ---------------------------------------------------
+# Step 5: Prediction
+# ---------------------------------------------------
+y_pred = model.predict(X_test)
+result_df = pd.DataFrame({
+    &quot;Actual&quot;: y_test.values,
+    &quot;Predicted&quot;: y_pred
+})
+print(&quot;\nActual vs Predicted Values:&quot;)
+print(result_df.head())
+# ---------------------------------------------------
+# Step 6: Model Evaluation
+# ---------------------------------------------------
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+print(&quot;\nModel Evaluation Metrics:&quot;)
+print(&quot;Mean Squared Error:&quot;, mse)
+print(&quot;Root Mean Squared Error:&quot;, rmse)
+print(&quot;Mean Absolute Error:&quot;, mae)
+print(&quot;R2 Score:&quot;, r2)
+# ---------------------------------------------------
+# Step 7: Actual vs Predicted Plot
+# ---------------------------------------------------
+plt.figure(figsize=(7, 5))
+plt.scatter(y_test, y_pred)
+plt.xlabel(&quot;Actual Values&quot;)
+plt.ylabel(&quot;Predicted Values&quot;)
+plt.title(&quot;Actual vs Predicted Values&quot;)
+plt.show()
+# ---------------------------------------------------
+# Step 8: Residual Analysis
+# ---------------------------------------------------
+residuals = y_test - y_pred
+print(&quot;\nResiduals:&quot;)
+print(residuals.head())
+plt.figure(figsize=(7, 5))
+plt.scatter(y_pred, residuals)
+plt.axhline(y=0, linestyle=&quot;--&quot;)
+plt.xlabel(&quot;Predicted Values&quot;)
+plt.ylabel(&quot;Residuals&quot;)
+plt.title(&quot;Residual Plot&quot;)
+plt.show()
+plt.figure(figsize=(7, 5))
+plt.hist(residuals, bins=20, edgecolor=&quot;black&quot;)
+plt.xlabel(&quot;Residuals&quot;)
+plt.ylabel(&quot;Frequency&quot;)
+plt.title(&quot;Histogram of Residuals&quot;)
+plt.show()
+# ---------------------------------------------------
+# Step 9: VIF for Multicollinearity Detection
+# ---------------------------------------------------
+X_vif = sm.add_constant(X)
+vif_data = pd.DataFrame()
+vif_data[&quot;Feature&quot;] = X_vif.columns
+vif_data[&quot;VIF&quot;] = [
+    variance_inflation_factor(X_vif.values, i)
+    for i in range(X_vif.shape[1])
+]
+print(&quot;\nVariance Inflation Factor:&quot;)
+print(vif_data)
+print(&quot;\nVIF Interpretation:&quot;)
+print(&quot;VIF = 1 means no multicollinearity.&quot;)
+print(&quot;VIF between 1 and 5 means moderate correlation.&quot;)
+print(&quot;VIF greater than 5 or 10 indicates high multicollinearity.&quot;)
+# ---------------------------------------------------
+# Step 10: Cook&#x27;s Distance
+# ---------------------------------------------------
+X_sm = sm.add_constant(X)
+ols_model = sm.OLS(y, X_sm).fit()
+influence = ols_model.get_influence()
+cooks_distance = influence.cooks_distance[0]
+print(&quot;\nCook&#x27;s Distance Values:&quot;)
+print(cooks_distance[:10])
+threshold = 4 / len(df)
+print(&quot;\nCook&#x27;s Distance Threshold:&quot;, threshold)
+influential_points = np.where(cooks_distance &gt; threshold)[0]
+print(&quot;\nInfluential Data Points:&quot;)
+print(influential_points)
+print(&quot;\nNumber of Influential Points:&quot;, len(influential_points))
+# Cook&#x27;s Distance Plot
+plt.figure(figsize=(10, 5))
+plt.stem(np.arange(len(cooks_distance)), cooks_distance, markerfmt=&quot;,&quot;)
+plt.axhline(y=threshold, linestyle=&quot;--&quot;)
+plt.xlabel(&quot;Observation Index&quot;)
+plt.ylabel(&quot;Cook&#x27;s Distance&quot;)
+plt.title(&quot;Cook&#x27;s Distance Plot&quot;)
+plt.show()
+# ---------------------------------------------------
+# Step 11: Model Summary using Statsmodels
+# ---------------------------------------------------
+print(&quot;\nOLS Regression Summary:&quot;)
+print(ols_model.summary())
+# ---------------------------------------------------
+# Final Conclusion
+# ---------------------------------------------------
+print(&quot;\nFinal Conclusion:&quot;)
+print(&quot;Linear Regression was successfully performed on the dataset.&quot;)
+print(&quot;The model was evaluated using MSE, RMSE, MAE, and R2 score.&quot;)
+print(&quot;Residual plots were used to check the error pattern.&quot;)
+print(&quot;VIF was used to detect multicollinearity among independent variables.&quot;)
+print(&quot;Cook&#x27;s Distance was used to identify influential observations.&quot;)
+print(&quot;Experiment completed successfully.&quot;)</code></pre>
+</section>
+
+<section class="experiment-block" id="exp9">
+  <div class="exp-header">
+    <h2>Exp 9 – Ridge, Lasso, and Elastic Net with Hyperparameter Tuning</h2>
+    <button class="copy-exp-btn" onclick="copyExp(this, 'code-exp9')">Copy Code</button>
+  </div>
+  <pre><code id="code-exp9"># Experiment 9: Ridge, Lasso, Elastic Net with Hyperparameter Tuning
+# Import required libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_diabetes
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import Ridge, Lasso, ElasticNet
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+# ---------------------------------------------------
+# Step 1: Load Dataset
+# ---------------------------------------------------
+diabetes = load_diabetes()
+df = pd.DataFrame(diabetes.data, columns=diabetes.feature_names)
+df[&quot;target&quot;] = diabetes.target
+print(&quot;First 5 rows of dataset:&quot;)
+print(df.head())
+print(&quot;\nShape of dataset:&quot;)
+print(df.shape)
+# ---------------------------------------------------
+# Step 2: Define Features and Target
+# ---------------------------------------------------
+X = df.drop(&quot;target&quot;, axis=1)
+y = df[&quot;target&quot;]
+# ---------------------------------------------------
+# Step 3: Train-Test Split
+# ---------------------------------------------------
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+print(&quot;\nTraining Data Shape:&quot;, X_train.shape)
+print(&quot;Testing Data Shape:&quot;, X_test.shape)
+# ---------------------------------------------------
+# Step 4: Function for Model Evaluation
+# ---------------------------------------------------
+def evaluate_model(model, X_test, y_test):
+    y_pred = model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
+    mae = mean_absolute_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+    return mse, rmse, mae, r2, y_pred
+# ---------------------------------------------------
+# Step 5: Ridge Regression with Hyperparameter Tuning
+# ---------------------------------------------------
+ridge_pipeline = Pipeline([
+    (&quot;scaler&quot;, StandardScaler()),
+    (&quot;ridge&quot;, Ridge())
+])
+ridge_params = {
+    &quot;ridge__alpha&quot;: [0.001, 0.01, 0.1, 1, 10, 100]
+}
+ridge_grid = GridSearchCV(
+    ridge_pipeline,
+    ridge_params,
+    cv=5,
+    scoring=&quot;r2&quot;
+)
+ridge_grid.fit(X_train, y_train)
+print(&quot;\nBest Ridge Parameters:&quot;)
+print(ridge_grid.best_params_)
+# ---------------------------------------------------
+# Step 6: Lasso Regression with Hyperparameter Tuning
+# ---------------------------------------------------
+lasso_pipeline = Pipeline([
+    (&quot;scaler&quot;, StandardScaler()),
+    (&quot;lasso&quot;, Lasso(max_iter=10000))
+])
+lasso_params = {
+    &quot;lasso__alpha&quot;: [0.001, 0.01, 0.1, 1, 10, 100]
+}
+lasso_grid = GridSearchCV(
+    lasso_pipeline,
+    lasso_params,
+    cv=5,
+    scoring=&quot;r2&quot;
+)
+lasso_grid.fit(X_train, y_train)
+print(&quot;\nBest Lasso Parameters:&quot;)
+print(lasso_grid.best_params_)
+# ---------------------------------------------------
+# Step 7: Elastic Net with Hyperparameter Tuning
+# ---------------------------------------------------
+elastic_pipeline = Pipeline([
+    (&quot;scaler&quot;, StandardScaler()),
+    (&quot;elasticnet&quot;, ElasticNet(max_iter=10000))
+])
+elastic_params = {
+    &quot;elasticnet__alpha&quot;: [0.001, 0.01, 0.1, 1, 10],
+    &quot;elasticnet__l1_ratio&quot;: [0.1, 0.3, 0.5, 0.7, 0.9]
+}
+elastic_grid = GridSearchCV(
+    elastic_pipeline,
+    elastic_params,
+    cv=5,
+    scoring=&quot;r2&quot;
+)
+elastic_grid.fit(X_train, y_train)
+print(&quot;\nBest Elastic Net Parameters:&quot;)
+print(elastic_grid.best_params_)
+# ---------------------------------------------------
+# Step 8: Evaluate All Models
+# ---------------------------------------------------
+models = {
+    &quot;Ridge&quot;: ridge_grid.best_estimator_,
+    &quot;Lasso&quot;: lasso_grid.best_estimator_,
+    &quot;Elastic Net&quot;: elastic_grid.best_estimator_
+}
+results = []
+predictions = {}
+for name, model in models.items():
+    mse, rmse, mae, r2, y_pred = evaluate_model(model, X_test, y_test)
+    predictions[name] = y_pred
+    results.append({
+        &quot;Model&quot;: name,
+        &quot;MSE&quot;: mse,
+        &quot;RMSE&quot;: rmse,
+        &quot;MAE&quot;: mae,
+        &quot;R2 Score&quot;: r2
+    })
+results_df = pd.DataFrame(results)
+print(&quot;\nModel Performance Comparison:&quot;)
+print(results_df)
+# ---------------------------------------------------
+# Step 9: Visualization of R2 Score
+# ---------------------------------------------------
+plt.figure(figsize=(7, 5))
+plt.bar(results_df[&quot;Model&quot;], results_df[&quot;R2 Score&quot;], edgecolor=&quot;black&quot;)
+plt.title(&quot;R2 Score Comparison&quot;)
+plt.xlabel(&quot;Model&quot;)
+plt.ylabel(&quot;R2 Score&quot;)
+plt.show()
+# ---------------------------------------------------
+# Step 10: Visualization of RMSE
+# ---------------------------------------------------
+plt.figure(figsize=(7, 5))
+plt.bar(results_df[&quot;Model&quot;], results_df[&quot;RMSE&quot;], edgecolor=&quot;black&quot;)
+plt.title(&quot;RMSE Comparison&quot;)
+plt.xlabel(&quot;Model&quot;)
+plt.ylabel(&quot;RMSE&quot;)
+plt.show()
+# ---------------------------------------------------
+# Step 11: Actual vs Predicted Values
+# ---------------------------------------------------
+for name, y_pred in predictions.items():
+    plt.figure(figsize=(7, 5))
+    plt.scatter(y_test, y_pred)
+    plt.xlabel(&quot;Actual Values&quot;)
+    plt.ylabel(&quot;Predicted Values&quot;)
+    plt.title(f&quot;Actual vs Predicted Values - {name}&quot;)
+    plt.show()
+# ---------------------------------------------------
+# Step 12: Coefficient Comparison
+# ---------------------------------------------------
+feature_names = X.columns
+ridge_coefficients = ridge_grid.best_estimator_.named_steps[&quot;ridge&quot;].coef_
+lasso_coefficients = lasso_grid.best_estimator_.named_steps[&quot;lasso&quot;].coef_
+elastic_coefficients = elastic_grid.best_estimator_.named_steps[&quot;elasticnet&quot;].coef_
+coef_df = pd.DataFrame({
+    &quot;Feature&quot;: feature_names,
+    &quot;Ridge&quot;: ridge_coefficients,
+    &quot;Lasso&quot;: lasso_coefficients,
+    &quot;Elastic Net&quot;: elastic_coefficients
+})
+print(&quot;\nCoefficient Comparison:&quot;)
+print(coef_df)
+# ---------------------------------------------------
+# Step 13: Coefficient Visualization
+# ---------------------------------------------------
+coef_df.set_index(&quot;Feature&quot;).plot(kind=&quot;bar&quot;, figsize=(10, 6))
+plt.title(&quot;Coefficient Comparison of Ridge, Lasso, and Elastic Net&quot;)
+plt.xlabel(&quot;Features&quot;)
+plt.ylabel(&quot;Coefficient Value&quot;)
+plt.show()
+# ---------------------------------------------------
+# Step 14: Final Conclusion
+# ---------------------------------------------------
+best_model = results_df.loc[results_df[&quot;R2 Score&quot;].idxmax(), &quot;Model&quot;]
+print(&quot;\nFinal Conclusion:&quot;)
+print(&quot;Ridge, Lasso, and Elastic Net regression models were successfully implemented on the diabetes dataset.&quot;)
+print(&quot;Hyperparameter tuning was performed using GridSearchCV.&quot;)
+print(&quot;Models were evaluated using MSE, RMSE, MAE, and R2 score.&quot;)
+print(&quot;Best performing model based on R2 score:&quot;, best_model)
+print(&quot;Regularization helps reduce overfitting by controlling model coefficients.&quot;)
+print(&quot;Lasso can shrink some coefficients to zero and helps in feature selection.&quot;)
+print(&quot;Elastic Net combines Ridge and Lasso regularization.&quot;)</code></pre>
+</section>
+
+<section class="experiment-block" id="exp10">
+  <div class="exp-header">
+    <h2>Exp 10 – Classification Models: Logistic Regression, KNN, Naive Bayes &amp; ROC-AUC Analysis</h2>
+    <button class="copy-exp-btn" onclick="copyExp(this, 'code-exp10')">Copy Code</button>
+  </div>
+  <pre><code id="code-exp10"># Experiment 10: Classification Models
+# Logistic Regression, KNN, Naive Bayes, ROC Analysis
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    classification_report,
+    roc_curve,
+)
+# Step 1: Load Breast Cancer Wisconsin Dataset
+cancer = load_breast_cancer()
+df = pd.DataFrame(cancer.data, columns=cancer.feature_names)
+df[&quot;target&quot;] = cancer.target
+print(&quot;First 5 rows of dataset:&quot;)
+print(df.head())
+print(&quot;\nShape of dataset:&quot;)
+print(df.shape)
+print(&quot;\nTarget Names:&quot;)
+print(cancer.target_names)
+print(&quot;\nTarget Count:&quot;)
+print(df[&quot;target&quot;].value_counts())
+# Step 2: Define Features and Target
+X = df.drop(&quot;target&quot;, axis=1)
+y = df[&quot;target&quot;]
+# Step 3: Split Dataset into Training and Testing Sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
     test_size=0.2,
     random_state=42
 )
-
-# Start MLflow run
-with mlflow.start_run() as run:
-
-    # Model parameters
-    max_iter = 200
-
-    # Create machine learning model
-    model = LogisticRegression(max_iter=max_iter)
-
+print(&quot;\nTraining Data Shape:&quot;, X_train.shape)
+print(&quot;Testing Data Shape:&quot;, X_test.shape)
+# Step 4: Feature Scaling
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+# Step 5: Create Classification Models
+models = {
+    &quot;Logistic Regression&quot;: LogisticRegression(max_iter=10000),
+    &quot;KNN&quot;: KNeighborsClassifier(n_neighbors=5),
+    &quot;Naive Bayes&quot;: GaussianNB()
+}
+results = []
+# Step 6: Train and Evaluate Models
+plt.figure(figsize=(8, 6))
+for name, model in models.items():
     # Train model
-    model.fit(X_train, y_train)
-
-    # Make predictions
-    y_pred = model.predict(X_test)
-
-    # Calculate accuracy
+    model.fit(X_train_scaled, y_train)
+    # Predict class labels
+    y_pred = model.predict(X_test_scaled)
+    # Predict probabilities for ROC curve
+    y_prob = model.predict_proba(X_test_scaled)[:, 1]
+    # Evaluation metrics
     accuracy = accuracy_score(y_test, y_pred)
+    auc_score = roc_auc_score(y_test, y_prob)
+    results.append({
+        &quot;Model&quot;: name,
+        &quot;Accuracy&quot;: accuracy,
+        &quot;ROC-AUC Score&quot;: auc_score
+    })
+    print(&quot;\n--------------------------------------&quot;)
+    print(&quot;Model:&quot;, name)
+    print(&quot;--------------------------------------&quot;)
+    print(&quot;\nAccuracy Score:&quot;)
+    print(accuracy)
+    print(&quot;\nConfusion Matrix:&quot;)
+    print(confusion_matrix(y_test, y_pred))
+    print(&quot;\nClassification Report:&quot;)
+    print(classification_report(y_test, y_pred))
+    print(&quot;\nROC-AUC Score:&quot;)
+    print(auc_score)
+    # ROC Curve values
+    fpr, tpr, thresholds = roc_curve(y_test, y_prob)
+    # Plot ROC Curve
+    plt.plot(fpr, tpr, label=f&quot;{name} AUC = {auc_score:.3f}&quot;)
+# Step 7: ROC Curve Visualization
+plt.plot([0, 1], [0, 1], linestyle=&quot;--&quot;, label=&quot;Random Classifier&quot;)
+plt.xlabel(&quot;False Positive Rate&quot;)
+plt.ylabel(&quot;True Positive Rate&quot;)
+plt.title(&quot;ROC Curve Comparison&quot;)
+plt.legend()
+plt.show()
+# Step 8: Model Performance Comparison
+results_df = pd.DataFrame(results)
+print(&quot;\nModel Performance Comparison:&quot;)
+print(results_df)
+# Step 9: Accuracy Comparison Bar Chart
+plt.figure(figsize=(7, 5))
+plt.bar(results_df[&quot;Model&quot;], results_df[&quot;Accuracy&quot;], edgecolor=&quot;black&quot;)
+plt.title(&quot;Accuracy Comparison&quot;)
+plt.xlabel(&quot;Model&quot;)
+plt.ylabel(&quot;Accuracy&quot;)
+plt.show()
+# Step 10: ROC-AUC Score Comparison Bar Chart
+plt.figure(figsize=(7, 5))
+plt.bar(results_df[&quot;Model&quot;], results_df[&quot;ROC-AUC Score&quot;], edgecolor=&quot;black&quot;)
+plt.title(&quot;ROC-AUC Score Comparison&quot;)
+plt.xlabel(&quot;Model&quot;)
+plt.ylabel(&quot;ROC-AUC Score&quot;)
+plt.show()
+# Step 11: Final Conclusion
+best_model_accuracy = results_df.loc[results_df[&quot;Accuracy&quot;].idxmax(), &quot;Model&quot;]
+best_model_auc = results_df.loc[results_df[&quot;ROC-AUC Score&quot;].idxmax(), &quot;Model&quot;]
+print(&quot;\nFinal Conclusion:&quot;)
+print(&quot;Classification models were successfully implemented on the Breast Cancer dataset.&quot;)
+print(&quot;Logistic Regression, KNN, and Naive Bayes models were trained and evaluated.&quot;)
+print(&quot;The models were compared using accuracy, confusion matrix, classification report, and ROC-AUC score.&quot;)
+print(&quot;Best model based on Accuracy:&quot;, best_model_accuracy)
+print(&quot;Best model based on ROC-AUC Score:&quot;, best_model_auc)
+print(&quot;ROC curve helps to compare the classification performance of different models.&quot;)</code></pre>
+</section>
 
-    # Log parameters
-    mlflow.log_param(&quot;algorithm&quot;, &quot;Logistic Regression&quot;)
-    mlflow.log_param(&quot;max_iter&quot;, max_iter)
-    mlflow.log_param(&quot;test_size&quot;, 0.2)
+</main>
 
-    # Log metric
-    mlflow.log_metric(&quot;accuracy&quot;, accuracy)
+<footer>
+  SML Lab Experiments Repository • Clean Python Implementations
+</footer>
 
-    # Log and register model
-    mlflow.sklearn.log_model(
-        sk_model=model,
-        name=&quot;iris_model&quot;,
-        registered_model_name=&quot;Iris_Logistic_Regression&quot;
-    )
-
-    print(&quot;Model training completed.&quot;)
-    print(&quot;Accuracy:&quot;, accuracy)
-    print(&quot;Run ID:&quot;, run.info.run_id)
-
-print(&quot;Experiment completed successfully.&quot;)
-</code></pre>
-<p>Save: <code>Ctrl+O</code> → <code>Enter</code> → <code>Ctrl+X</code></p>
-<p><strong>Step 7:</strong> Run.</p>
-<pre><code class="language-bash">python train_model.py
-</code></pre>
-<p><em>Expected:</em></p>
-<pre><code>Model training completed.
-Accuracy: 1.0
-Run ID: xxxxxxxxxxxxxxxxxxxxx
-Experiment completed successfully.
-</code></pre>
-<p>(Accuracy may vary slightly depending on version/data split.)</p>
-<p><strong>Step 8:</strong> Observe MLflow UI.
-- <code>http://localhost:5000</code> → open <strong>Iris_ML_Lifecycle</strong> → click the run</p>
-<p><em>Expected:</em>
-- Parameters: <code>algorithm = Logistic Regression</code>, <code>max_iter = 200</code>, <code>test_size = 0.2</code>
-- Metric: <code>accuracy</code>
-- Model: <code>iris_model</code>
-- Run ID shown</p>
-<p><strong>Step 9:</strong> Model registration.
-- MLflow UI → <strong>Models</strong> → <code>Iris_Logistic_Regression</code></p>
-<p><em>Expected:</em> <code>Version 1</code> listed.</p>
-<p><strong>Step 10:</strong> Load registered model. Create <code>predict.py</code>.</p>
-<pre><code class="language-bash">nano predict.py
-</code></pre>
-<pre><code class="language-python">import mlflow
-
-mlflow.set_tracking_uri(&quot;http://localhost:5000&quot;)
-
-model = mlflow.pyfunc.load_model(&quot;models:/Iris_Logistic_Regression/1&quot;)
-
-prediction = model.predict([[5.1, 3.5, 1.4, 0.2]])
-
-print(&quot;Prediction:&quot;, prediction)
-</code></pre>
-<p>Save and run:</p>
-<pre><code class="language-bash">python predict.py
-</code></pre>
-<p><em>Expected:</em> <code>Prediction: [0]</code>  (0 = Setosa, 1 = Versicolor, 2 = Virginica)</p>
-<p><strong>Step 11:</strong> Deploy model – open a <strong>third terminal</strong>.</p>
-<pre><code class="language-bash">cd ~/mlflow_experiment
-source venv/bin/activate
-mlflow models serve \
--m &quot;models:/Iris_Logistic_Regression/1&quot; \
--p 5001
-</code></pre>
-<p><em>Expected:</em> Model server starts and listens on <code>http://127.0.0.1:5001</code>. Keep terminal open.</p>
-<p><strong>Step 12:</strong> Test deployed model – open a <strong>fourth terminal</strong>.</p>
-<pre><code class="language-bash">curl -X POST http://127.0.0.1:5001/invocations \
--H &quot;Content-Type: application/json&quot; \
--d '{&quot;inputs&quot;: [[5.1, 3.5, 1.4, 0.2]]}'
-</code></pre>
-<p><em>Expected:</em> Response containing prediction <code>[0]</code> (Setosa).</p>
 <script>
-var experimentHeadings = Array.from(document.querySelectorAll('h1'));
-var body = document.body;
-var bodyChildren = Array.from(body.children);
-var pages = [];
-var pageContainer = document.createElement('main');
-pageContainer.id = 'experiment-pages';
-
-experimentHeadings.forEach(function (heading, index) {
-  var headingIndex = bodyChildren.indexOf(heading);
-  var startIndex = headingIndex;
-  var previous = bodyChildren[headingIndex - 1];
-  if (previous && previous.matches('p') && previous.querySelector('[id^="exp"]')) {
-    startIndex--;
-  }
-  var nextHeading = experimentHeadings[index + 1];
-  var endIndex = nextHeading ? bodyChildren.indexOf(nextHeading) : bodyChildren.length;
-  var page = document.createElement('section');
-  page.className = 'experiment-page';
-  page.dataset.page = String(index);
-  page.id = 'page-' + index;
-  var nodes = bodyChildren.slice(startIndex, endIndex);
-  if (index === 0) body.insertBefore(pageContainer, nodes[0]);
-  nodes.forEach(function (node) { page.appendChild(node); });
-  pages.push(page);
-});
-
-pages.forEach(function (page, index) {
-  var controls = document.createElement('nav');
-  controls.className = 'page-controls';
-  controls.setAttribute('aria-label', 'Experiment pages');
-
-  var previousButton = document.createElement('button');
-  previousButton.className = 'page-btn previous-page';
-  previousButton.type = 'button';
-  previousButton.textContent = 'Previous';
-  previousButton.disabled = index === 0;
-  previousButton.addEventListener('click', function () { showPage(index - 1); });
-
-  var nextButton = document.createElement('button');
-  nextButton.className = 'page-btn next-page';
-  nextButton.type = 'button';
-  nextButton.textContent = 'Next';
-  nextButton.disabled = index === pages.length - 1;
-  nextButton.addEventListener('click', function () { showPage(index + 1); });
-
-  controls.appendChild(previousButton);
-  controls.appendChild(nextButton);
-  page.appendChild(controls);
-  pageContainer.appendChild(page);
-});
-
-function showPage(index, updateHash) {
-  if (index < 0 || index >= pages.length) return;
-  pages.forEach(function (page, pageIndex) {
-    page.classList.toggle('active', pageIndex === index);
-  });
-  if (updateHash !== false) {
-    var anchor = pages[index].querySelector('[id^="exp"]');
-    if (anchor) history.replaceState(null, '', '#' + anchor.id);
-  }
-  window.scrollTo(0, 0);
-}
-
-function pageIndexForHash(hash) {
-  return pages.findIndex(function (page) {
-    return page.querySelector('#' + CSS.escape(hash.slice(1)));
+function copyExp(btn, codeId) {
+  const codeEl = document.getElementById(codeId);
+  if (!codeEl) return;
+  const text = codeEl.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const originalText = btn.innerText;
+    btn.innerText = "✓ Copied!";
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.classList.remove("copied");
+    }, 2000);
+  }).catch(err => {
+    console.error("Failed to copy:", err);
   });
 }
-
-document.querySelectorAll('a[href^="#exp"]').forEach(function (link) {
-  link.addEventListener('click', function (event) {
-    var index = pageIndexForHash(link.getAttribute('href'));
-    if (index !== -1) {
-      event.preventDefault();
-      showPage(index);
-    }
-  });
-});
-
-var initialPage = pageIndexForHash(window.location.hash);
-showPage(initialPage === -1 ? 0 : initialPage, false);
-
-document.querySelectorAll('pre').forEach(function (pre) {
-  var btn = document.createElement('button');
-  btn.className = 'copy-btn';
-  btn.type = 'button';
-  btn.textContent = 'Copy';
-  btn.addEventListener('click', function () {
-    var text = pre.querySelector('code') ? pre.querySelector('code').innerText : pre.innerText;
-    function ok() {
-      btn.textContent = 'Copied!'; btn.classList.add('done');
-      setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500);
-    }
-    function fallback() {
-      var ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); ok(); } catch (e) { btn.textContent = 'Failed'; }
-      document.body.removeChild(ta);
-    }
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).then(ok, fallback);
-    } else { fallback(); }
-  });
-  pre.appendChild(btn);
-});
-
-experimentHeadings.forEach(function (heading) {
-  var btn = document.createElement('button');
-  btn.className = 'copy-exp-btn';
-  btn.type = 'button';
-  btn.textContent = 'Copy experiment';
-  btn.addEventListener('click', function () {
-    var clone = heading.closest('.experiment-page').cloneNode(true);
-    clone.querySelectorAll('.page-controls, .copy-btn, .copy-exp-btn').forEach(function (button) {
-      button.remove();
-    });
-    var text = clone.innerText.trim();
-    function ok() {
-      btn.textContent = 'Copied!';
-      btn.classList.add('done');
-      setTimeout(function () {
-        btn.textContent = 'Copy experiment';
-        btn.classList.remove('done');
-      }, 1500);
-    }
-    function fallback() {
-      var ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); ok(); } catch (e) { btn.textContent = 'Failed'; }
-      document.body.removeChild(ta);
-    }
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(text).then(ok, fallback);
-    } else { fallback(); }
-  });
-  heading.appendChild(btn);
-});
 </script>
+
 </body>
 </html>
