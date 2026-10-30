@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>All Experiments</title>
+<style>
+body{background:#000;color:#fff}
+a{color:#fff}
+button{background:#000;color:#fff;border:1px solid #fff}
+body.light{background:#fff;color:#000}
+body.light a{color:#000}
+body.light button{background:#fff;color:#000;border:1px solid #000}
+.page{display:none}
+#contents{display:block}
+body:has(.page:target) #contents{display:none}
+.page:target{display:block}
+@media print{.page,#contents{display:block !important;page-break-after:always}.nav,button{display:none}body,body.light{background:#fff;color:#000}a,body.light a{color:#000}}
+</style>
+</head>
+<body>
+<p><button id="themeBtn" onclick="toggleTheme()">Switch to white</button></p>
+<div class="page" id="contents">
+<h1>All Experiments</h1>
+<ol>
+<li><a href="#p1">Practical 1: Exploratory Data Analysis</a></li>
+<li><a href="#p2">Experiment 2: Data Preprocessing</a></li>
+<li><a href="#p3">Experiment 3: Sampling Methods</a></li>
+<li><a href="#p4">Experiment 4: Demonstration of Central Limit Theorem using Simulations</a></li>
+<li><a href="#p5">Experiment 5: Hypothesis Testing</a></li>
+<li><a href="#p6">Experiment 6: Bootstrap Confidence Intervals and Permutation Tests</a></li>
+<li><a href="#p7">Experiment 7: MLE Estimation for Normal and Bernoulli Distributions</a></li>
+<li><a href="#p8">Experiment 8: Linear Regression and Diagnostics</a></li>
+<li><a href="#p9">Experiment 9: Ridge, Lasso, Elastic Net with Hyperparameter Tuning</a></li>
+<li><a href="#p10">Experiment 10: Classification Models</a></li>
+</ol>
+</div>
+<div class="page" id="p1">
+<p class="nav"><a href="#">Contents</a>  <a href="#p2">Next</a></p>
+<h2>Practical 1: Exploratory Data Analysis</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre># Practical 1: Exploratory Data Analysis
+# Dataset: Iris Dataset
+
+# Import required libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.datasets import load_iris
+
+# Load Iris dataset
+iris = load_iris()
+
+# Convert dataset into DataFrame
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+
+# Add target column
+df[&quot;species&quot;] = iris.target
+
+# Convert numeric target values into species names
+df[&quot;species&quot;] = df[&quot;species&quot;].map({
+    0: &quot;setosa&quot;,
+    1: &quot;versicolor&quot;,
+    2: &quot;virginica&quot;
+})
+
+# Display first five rows
+print(&quot;First 5 rows of dataset:&quot;)
+print(df.head())
+
+# Display shape of dataset
+print(&quot;\nShape of dataset:&quot;)
+print(df.shape)
+
+# Display column names
+print(&quot;\nColumn names:&quot;)
+print(df.columns)
+
+# Display dataset information
+print(&quot;\nDataset information:&quot;)
+print(df.info())
+
+# Check missing values
+print(&quot;\nMissing values in each column:&quot;)
+print(df.isnull().sum())
+
+# Descriptive statistics
+print(&quot;\nDescriptive Statistics:&quot;)
+print(df.describe())
+
+# Mean of numerical columns
+print(&quot;\nMean of numerical columns:&quot;)
+print(df.mean(numeric_only=True))
+
+# Median of numerical columns
+print(&quot;\nMedian of numerical columns:&quot;)
+print(df.median(numeric_only=True))
+
+# Mode of all columns
+print(&quot;\nMode of dataset:&quot;)
+print(df.mode())
+
+# Standard deviation of numerical columns
+print(&quot;\nStandard Deviation:&quot;)
+print(df.std(numeric_only=True))
+
+# Minimum values
+print(&quot;\nMinimum values:&quot;)
+print(df.min(numeric_only=True))
+
+# Maximum values
+print(&quot;\nMaximum values:&quot;)
+print(df.max(numeric_only=True))
+
+# Count species values
+print(&quot;\nCount of each species:&quot;)
+print(df[&quot;species&quot;].value_counts())
+
+# Histogram for all numerical features
+df.hist(figsize=(10, 8))
+plt.suptitle(&quot;Histograms of Iris Dataset Features&quot;)
+plt.show()
+
+# Boxplot for numerical features
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=df.drop(&quot;species&quot;, axis=1))
+plt.title(&quot;Boxplot of Iris Dataset Features&quot;)
+plt.show()
+
+# Correlation matrix
+numeric_df = df.drop(&quot;species&quot;, axis=1)
+correlation_matrix = numeric_df.corr()
+
+print(&quot;\nCorrelation Matrix:&quot;)
+print(correlation_matrix)
+
+# Heatmap of correlation matrix
+plt.figure(figsize=(8, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap=&quot;coolwarm&quot;)
+plt.title(&quot;Correlation Matrix Heatmap&quot;)
+plt.show()
+
+# Pairplot
+sns.pairplot(df, hue=&quot;species&quot;)
+plt.show()
+
+# Final conclusion
+print(&quot;\nConclusion:&quot;)
+print(&quot;Exploratory Data Analysis was successfully performed on the Iris dataset.&quot;)
+print(&quot;Descriptive statistics, histograms, boxplots, correlation matrix, and pairplot&quot;)
+print(&quot;were generated.&quot;)
+print(&quot;The dataset has no missing values.&quot;)
+print(&quot;Petal length and petal width show strong positive correlation.&quot;)
+print(&quot;Setosa species is easily separable from the other two species.&quot;)</pre>
+</div>
+<div class="page" id="p2">
+<p class="nav"><a href="#">Contents</a> <a href="#p1">Previous</a> <a href="#p3">Next</a></p>
+<h2>Experiment 2: Data Preprocessing</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre># Experiment 2: Data Preprocessing
+# Missing values, encoding, scaling, and outlier detection
+
+# Step 1: Import required libraries
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.preprocessing import LabelEncoder, StandardScaler, MinMaxScaler
+
+
+# Step 2: Create sample dataset
+# You can replace this part with: df = pd.read_csv(&quot;your_file.csv&quot;)
+
+data = {
+    &#x27;Name&#x27;: [&#x27;Amit&#x27;, &#x27;Riya&#x27;, &#x27;Sahil&#x27;, &#x27;Neha&#x27;, &#x27;Raj&#x27;, &#x27;Priya&#x27;, &#x27;Karan&#x27;, &#x27;Anjali&#x27;],
+    &#x27;Age&#x27;: [21, 22, np.nan, 24, 23, np.nan, 25, 100],
+    &#x27;Gender&#x27;: [&#x27;Male&#x27;, &#x27;Female&#x27;, &#x27;Male&#x27;, &#x27;Female&#x27;, np.nan, &#x27;Female&#x27;, &#x27;Male&#x27;, &#x27;Female&#x27;],
+    &#x27;City&#x27;: [&#x27;Mumbai&#x27;, &#x27;Pune&#x27;, &#x27;Delhi&#x27;, &#x27;Mumbai&#x27;, &#x27;Pune&#x27;, np.nan, &#x27;Delhi&#x27;, &#x27;Mumbai&#x27;],
+    &#x27;Salary&#x27;: [25000, 30000, 28000, np.nan, 35000, 32000, 31000, 150000]
+}
+
+df = pd.DataFrame(data)
+
+print(&quot;Original Dataset:&quot;)
+print(df)
+
+
+# Step 3: Check missing values
+
+print(&quot;\nMissing Values Before Preprocessing:&quot;)
+print(df.isnull().sum())
+
+
+# Step 4: Handle missing values
+
+# Fill missing numerical values with mean
+df[&#x27;Age&#x27;] = df[&#x27;Age&#x27;].fillna(df[&#x27;Age&#x27;].mean())
+df[&#x27;Salary&#x27;] = df[&#x27;Salary&#x27;].fillna(df[&#x27;Salary&#x27;].mean())
+
+# Fill missing categorical values with mode
+df[&#x27;Gender&#x27;] = df[&#x27;Gender&#x27;].fillna(df[&#x27;Gender&#x27;].mode()[0])
+df[&#x27;City&#x27;] = df[&#x27;City&#x27;].fillna(df[&#x27;City&#x27;].mode()[0])
+
+print(&quot;\nDataset After Handling Missing Values:&quot;)
+print(df)
+
+print(&quot;\nMissing Values After Preprocessing:&quot;)
+print(df.isnull().sum())
+
+
+# Step 5: Encode categorical data
+
+# Label Encoding for Gender
+le = LabelEncoder()
+df[&#x27;Gender&#x27;] = le.fit_transform(df[&#x27;Gender&#x27;])
+
+# One-Hot Encoding for City
+df = pd.get_dummies(df, columns=[&#x27;City&#x27;], drop_first=True)
+
+print(&quot;\nDataset After Encoding:&quot;)
+print(df)
+
+
+# Step 6: Scaling numerical data
+
+# Standardization using StandardScaler
+standard_scaler = StandardScaler()
+
+df[[&#x27;Age_Standardized&#x27;, &#x27;Salary_Standardized&#x27;]] = standard_scaler.fit_transform(
+    df[[&#x27;Age&#x27;, &#x27;Salary&#x27;]]
+)
+
+# Normalization using MinMaxScaler
+minmax_scaler = MinMaxScaler()
+
+df[[&#x27;Age_Normalized&#x27;, &#x27;Salary_Normalized&#x27;]] = minmax_scaler.fit_transform(
+    df[[&#x27;Age&#x27;, &#x27;Salary&#x27;]]
+)
+
+print(&quot;\nDataset After Scaling:&quot;)
+print(df)
+
+
+# Step 7: Outlier detection using Boxplot
+
+plt.figure(figsize=(6, 4))
+plt.boxplot(df[&#x27;Salary&#x27;])
+plt.title(&quot;Boxplot for Salary&quot;)
+plt.ylabel(&quot;Salary&quot;)
+plt.show()
+
+
+# Step 8: Outlier detection using IQR method
+
+Q1 = df[&#x27;Salary&#x27;].quantile(0.25)
+Q3 = df[&#x27;Salary&#x27;].quantile(0.75)
+
+IQR = Q3 - Q1
+
+lower_limit = Q1 - 1.5 * IQR
+upper_limit = Q3 + 1.5 * IQR
+
+print(&quot;\nQ1:&quot;, Q1)
+print(&quot;Q3:&quot;, Q3)
+print(&quot;IQR:&quot;, IQR)
+print(&quot;Lower Limit:&quot;, lower_limit)
+print(&quot;Upper Limit:&quot;, upper_limit)
+
+outliers = df[(df[&#x27;Salary&#x27;] &lt; lower_limit) | (df[&#x27;Salary&#x27;] &gt; upper_limit)]
+
+print(&quot;\nDetected Outliers:&quot;)
+print(outliers)
+
+
+# Step 9: Remove outliers
+
+df_no_outliers = df[
+    (df[&#x27;Salary&#x27;] &gt;= lower_limit) &amp;
+    (df[&#x27;Salary&#x27;] &lt;= upper_limit)
+]
+
+print(&quot;\nDataset After Removing Outliers:&quot;)
+print(df_no_outliers)
+
+
+# Step 10: Final result
+
+print(&quot;\nFinal Preprocessed Dataset:&quot;)
+print(df_no_outliers)
+
+print(&quot;\nExperiment Completed Successfully.&quot;)</pre>
+</div>
+<div class="page" id="p3">
+<p class="nav"><a href="#">Contents</a> <a href="#p2">Previous</a> <a href="#p4">Next</a></p>
+<h2>Experiment 3: Sampling Methods</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre># Experiment 3: Sampling Methods
+# Simple Random Sampling, Stratified Sampling, and Cluster Sampling
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+# Load Iris dataset
+iris = load_iris()
+
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+
+df[&quot;species&quot;] = iris.target
+df[&quot;species&quot;] = df[&quot;species&quot;].map({
+    0: &quot;setosa&quot;,
+    1: &quot;versicolor&quot;,
+    2: &quot;virginica&quot;
+})
+
+print(&quot;Original Dataset:&quot;)
+print(df.head())
+
+print(&quot;\nShape of Original Dataset:&quot;)
+print(df.shape)
+
+print(&quot;\nSpecies Count in Original Dataset:&quot;)
+print(df[&quot;species&quot;].value_counts())
+
+
+# -------------------------------
+# 1. Simple Random Sampling
+# -------------------------------
+
+simple_random_sample = df.sample(n=20, random_state=42)
+
+print(&quot;\nSimple Random Sample:&quot;)
+print(simple_random_sample)
+
+print(&quot;\nSpecies Count in Simple Random Sample:&quot;)
+print(simple_random_sample[&quot;species&quot;].value_counts())
+
+
+# -------------------------------
+# 2. Stratified Sampling
+# -------------------------------
+
+stratified_sample = df.groupby(&quot;species&quot;, group_keys=False).sample(
+    frac=0.3, random_state=42
+)
+
+print(&quot;\nStratified Sample:&quot;)
+print(stratified_sample)
+
+print(&quot;\nSpecies Count in Stratified Sample:&quot;)
+print(stratified_sample[&quot;species&quot;].value_counts())
+
+
+# -------------------------------
+# 3. Cluster Sampling
+# -------------------------------
+
+clusters = df[&quot;species&quot;].unique()
+
+np.random.seed(42)
+selected_cluster = np.random.choice(clusters, size=1)
+
+cluster_sample = df[df[&quot;species&quot;].isin(selected_cluster)]
+
+print(&quot;\nSelected Cluster:&quot;)
+print(selected_cluster)
+
+print(&quot;\nCluster Sample:&quot;)
+print(cluster_sample)
+
+print(&quot;\nSpecies Count in Cluster Sample:&quot;)
+print(cluster_sample[&quot;species&quot;].value_counts())
+
+
+# -------------------------------
+# Visual 1: Species Distribution
+# -------------------------------
+
+plt.figure(figsize=(8, 5))
+df[&quot;species&quot;].value_counts().plot(kind=&quot;bar&quot;)
+plt.title(&quot;Species Distribution in Original Dataset&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+simple_random_sample[&quot;species&quot;].value_counts().plot(kind=&quot;bar&quot;)
+plt.title(&quot;Species Distribution in Simple Random Sample&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+stratified_sample[&quot;species&quot;].value_counts().plot(kind=&quot;bar&quot;)
+plt.title(&quot;Species Distribution in Stratified Sample&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+cluster_sample[&quot;species&quot;].value_counts().plot(kind=&quot;bar&quot;)
+plt.title(&quot;Species Distribution in Cluster Sample&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.show()
+
+
+# -------------------------------
+# Visual 2: Scatter Plot of Original Dataset
+# -------------------------------
+
+plt.figure(figsize=(8, 6))
+
+for species in df[&quot;species&quot;].unique():
+    subset = df[df[&quot;species&quot;] == species]
+    plt.scatter(
+        subset[&quot;sepal length (cm)&quot;],
+        subset[&quot;petal length (cm)&quot;],
+        label=species
+    )
+
+plt.title(&quot;Original Dataset: Sepal Length vs Petal Length&quot;)
+plt.xlabel(&quot;Sepal Length&quot;)
+plt.ylabel(&quot;Petal Length&quot;)
+plt.legend()
+plt.show()
+
+
+# -------------------------------
+# Visual 3: Scatter Plot of Simple Random Sample
+# -------------------------------
+
+plt.figure(figsize=(8, 6))
+
+for species in simple_random_sample[&quot;species&quot;].unique():
+    subset = simple_random_sample[simple_random_sample[&quot;species&quot;] == species]
+    plt.scatter(
+        subset[&quot;sepal length (cm)&quot;],
+        subset[&quot;petal length (cm)&quot;],
+        label=species
+    )
+
+plt.title(&quot;Simple Random Sample: Sepal Length vs Petal Length&quot;)
+plt.xlabel(&quot;Sepal Length&quot;)
+plt.ylabel(&quot;Petal Length&quot;)
+plt.legend()
+plt.show()
+
+
+# -------------------------------
+# Visual 4: Scatter Plot of Stratified Sample
+# -------------------------------
+
+plt.figure(figsize=(8, 6))
+
+for species in stratified_sample[&quot;species&quot;].unique():
+    subset = stratified_sample[stratified_sample[&quot;species&quot;] == species]
+    plt.scatter(
+        subset[&quot;sepal length (cm)&quot;],
+        subset[&quot;petal length (cm)&quot;],
+        label=species
+    )
+
+plt.title(&quot;Stratified Sample: Sepal Length vs Petal Length&quot;)
+plt.xlabel(&quot;Sepal Length&quot;)
+plt.ylabel(&quot;Petal Length&quot;)
+plt.legend()
+plt.show()
+
+
+# -------------------------------
+# Visual 5: Scatter Plot of Cluster Sample
+# -------------------------------
+
+plt.figure(figsize=(8, 6))
+
+for species in cluster_sample[&quot;species&quot;].unique():
+    subset = cluster_sample[cluster_sample[&quot;species&quot;] == species]
+    plt.scatter(
+        subset[&quot;sepal length (cm)&quot;],
+        subset[&quot;petal length (cm)&quot;],
+        label=species
+    )
+
+plt.title(&quot;Cluster Sample: Sepal Length vs Petal Length&quot;)
+plt.xlabel(&quot;Sepal Length&quot;)
+plt.ylabel(&quot;Petal Length&quot;)
+plt.legend()
+plt.show()
+
+
+# -------------------------------
+# Final Comparison
+# -------------------------------
+
+print(&quot;\nComparison of Sampling Methods:&quot;)
+print(&quot;Original Dataset Size:&quot;, df.shape[0])
+print(&quot;Simple Random Sample Size:&quot;, simple_random_sample.shape[0])
+print(&quot;Stratified Sample Size:&quot;, stratified_sample.shape[0])
+print(&quot;Cluster Sample Size:&quot;, cluster_sample.shape[0])
+
+print(&quot;\nConclusion:&quot;)
+print(&quot;Simple Random Sampling randomly selects records from the dataset.&quot;)
+print(&quot;Stratified Sampling maintains representation from each species group.&quot;)
+print(&quot;Cluster Sampling selects all records from one selected species cluster.&quot;)
+print(&quot;Visualizations help compare how each sampling method represents the dataset.&quot;)</pre>
+</div>
+<div class="page" id="p4">
+<p class="nav"><a href="#">Contents</a> <a href="#p3">Previous</a> <a href="#p5">Next</a></p>
+<h2>Experiment 4: Demonstration of Central Limit Theorem using Simulations</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre># Experiment 4: Demonstration of Central Limit Theorem using Simulations
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Step 1: Create a non-normal population
+np.random.seed(42)
+population = np.random.exponential(scale=2, size=10000)
+
+# Step 2: Plot original population distribution
+plt.figure(figsize=(8, 5))
+plt.hist(population, bins=50, edgecolor=&#x27;black&#x27;)
+plt.title(&quot;Original Population Distribution&quot;)
+plt.xlabel(&quot;Value&quot;)
+plt.ylabel(&quot;Frequency&quot;)
+plt.show()
+
+# Step 3: Function to generate sample means
+def generate_sample_means(population, sample_size, number_of_samples):
+    sample_means = []
+
+    for i in range(number_of_samples):
+        sample = np.random.choice(population, size=sample_size, replace=True)
+        sample_means.append(np.mean(sample))
+
+    return sample_means
+
+# Step 4: Generate sample means for different sample sizes
+sample_sizes = [5, 30, 50]
+number_of_samples = 1000
+
+for size in sample_sizes:
+    sample_means = generate_sample_means(population, size, number_of_samples)
+
+    plt.figure(figsize=(8, 5))
+    plt.hist(sample_means, bins=30, edgecolor=&#x27;black&#x27;)
+    plt.title(f&quot;Distribution of Sample Means, Sample Size = {size}&quot;)
+    plt.xlabel(&quot;Sample Mean&quot;)
+    plt.ylabel(&quot;Frequency&quot;)
+    plt.show()
+
+    print(f&quot;\nSample Size: {size}&quot;)
+    print(&quot;Mean of Sample Means:&quot;, np.mean(sample_means))
+    print(&quot;Standard Deviation of Sample Means:&quot;, np.std(sample_means))
+
+# Step 5: Final conclusion
+print(&quot;\nConclusion:&quot;)
+print(&quot;The original population follows a non-normal exponential distribution.&quot;)
+print(&quot;As the sample size increases, the distribution of sample means becomes more normal.&quot;)
+print(&quot;This demonstrates the Central Limit Theorem.&quot;)</pre>
+</div>
+<div class="page" id="p5">
+<p class="nav"><a href="#">Contents</a> <a href="#p4">Previous</a> <a href="#p6">Next</a></p>
+<h2>Experiment 5: Hypothesis Testing</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre># Experiment 5: Hypothesis Testing
+# t-test, Chi-square test, and ANOVA on Iris Dataset
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import load_iris
+from scipy.stats import ttest_ind, chi2_contingency, f_oneway
+
+# Significance level
+alpha = 0.05
+
+# Function to explain hypothesis decision
+def explain_decision(p_value, alpha):
+    print(&quot;\nDecision Explanation:&quot;)
+
+    if p_value &lt; alpha:
+        print(f&quot;Since the p-value ({p_value:.6f}) is less than the significance level ({alpha}),&quot;)
+        print(&quot;we reject the Null Hypothesis H0.&quot;)
+        print(&quot;This means the result is statistically significant.&quot;)
+        print(&quot;So, there is enough evidence to support the Alternative Hypothesis H1.&quot;)
+    else:
+        print(f&quot;Since the p-value ({p_value:.6f}) is greater than or equal to the significance level ({alpha}),&quot;)
+        print(&quot;we fail to reject the Null Hypothesis H0.&quot;)
+        print(&quot;This means the result is not statistically significant.&quot;)
+        print(&quot;So, there is not enough evidence to support the Alternative Hypothesis H1.&quot;)
+
+
+# Step 1: Load Iris dataset
+iris = load_iris()
+
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+
+df[&quot;species&quot;] = iris.target
+
+df[&quot;species&quot;] = df[&quot;species&quot;].map({
+    0: &quot;setosa&quot;,
+    1: &quot;versicolor&quot;,
+    2: &quot;virginica&quot;
+})
+
+print(&quot;First 5 rows of Iris Dataset:&quot;)
+print(df.head())
+
+print(&quot;\nSpecies Count:&quot;)
+print(df[&quot;species&quot;].value_counts())
+
+
+# ---------------------------------------------------
+# Test 1: Independent t-test
+# ---------------------------------------------------
+# Comparing petal length of versicolor and virginica
+
+versicolor = df[df[&quot;species&quot;] == &quot;versicolor&quot;][&quot;petal length (cm)&quot;]
+virginica = df[df[&quot;species&quot;] == &quot;virginica&quot;][&quot;petal length (cm)&quot;]
+
+t_stat, p_value = ttest_ind(versicolor, virginica)
+
+print(&quot;\n--- Independent t-test ---&quot;)
+
+print(&quot;\nPurpose:&quot;)
+print(&quot;To compare the mean petal length of versicolor and virginica species.&quot;)
+
+print(&quot;\nNull Hypothesis H0:&quot;)
+print(&quot;Mean petal length of versicolor and virginica is equal.&quot;)
+
+print(&quot;\nAlternative Hypothesis H1:&quot;)
+print(&quot;Mean petal length of versicolor and virginica is different.&quot;)
+
+print(&quot;\nT-statistic:&quot;, t_stat)
+print(&quot;P-value:&quot;, p_value)
+
+explain_decision(p_value, alpha)
+
+if p_value &lt; alpha:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;There is a significant difference in mean petal length between versicolor and virginica.&quot;)
+else:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;There is no significant difference in mean petal length between versicolor and virginica.&quot;)
+
+
+# Visual for t-test
+plt.figure(figsize=(7, 5))
+plt.boxplot(
+    [versicolor, virginica],
+    labels=[&quot;Versicolor&quot;, &quot;Virginica&quot;]
+)
+plt.title(&quot;T-test: Petal Length Comparison&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Petal Length (cm)&quot;)
+plt.text(
+    1.2,
+    max(max(versicolor), max(virginica)) - 0.2,
+    f&quot;p-value = {p_value:.6f}&quot;,
+    fontsize=10
+)
+plt.show()
+
+
+# ---------------------------------------------------
+# Test 2: Chi-square test
+# ---------------------------------------------------
+# Checking relationship between species and sepal length category
+
+df[&quot;sepal_length_category&quot;] = pd.cut(
+    df[&quot;sepal length (cm)&quot;],
+    bins=2,
+    labels=[&quot;Short&quot;, &quot;Long&quot;]
+)
+
+contingency_table = pd.crosstab(df[&quot;species&quot;], df[&quot;sepal_length_category&quot;])
+
+chi2_stat, chi2_p, dof, expected = chi2_contingency(contingency_table)
+
+print(&quot;\n--- Chi-square Test ---&quot;)
+
+print(&quot;\nPurpose:&quot;)
+print(&quot;To check whether species and sepal length category are related.&quot;)
+
+print(&quot;\nNull Hypothesis H0:&quot;)
+print(&quot;Species and sepal length category are independent.&quot;)
+
+print(&quot;\nAlternative Hypothesis H1:&quot;)
+print(&quot;Species and sepal length category are dependent.&quot;)
+
+print(&quot;\nContingency Table:&quot;)
+print(contingency_table)
+
+print(&quot;\nChi-square Statistic:&quot;, chi2_stat)
+print(&quot;P-value:&quot;, chi2_p)
+print(&quot;Degrees of Freedom:&quot;, dof)
+
+print(&quot;\nExpected Frequencies:&quot;)
+print(expected)
+
+explain_decision(chi2_p, alpha)
+
+if chi2_p &lt; alpha:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;Species and sepal length category are dependent.&quot;)
+else:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;Species and sepal length category are independent.&quot;)
+
+
+# Visual for chi-square test
+contingency_table.plot(kind=&quot;bar&quot;, figsize=(8, 5))
+plt.title(&quot;Chi-square Test: Species vs Sepal Length Category&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.legend(title=&quot;Sepal Length Category&quot;)
+plt.show()
+
+
+# ---------------------------------------------------
+# Test 3: One-way ANOVA
+# ---------------------------------------------------
+# Comparing sepal length among all three species
+
+setosa_sepal = df[df[&quot;species&quot;] == &quot;setosa&quot;][&quot;sepal length (cm)&quot;]
+versicolor_sepal = df[df[&quot;species&quot;] == &quot;versicolor&quot;][&quot;sepal length (cm)&quot;]
+virginica_sepal = df[df[&quot;species&quot;] == &quot;virginica&quot;][&quot;sepal length (cm)&quot;]
+
+f_stat, anova_p = f_oneway(setosa_sepal, versicolor_sepal, virginica_sepal)
+
+print(&quot;\n--- One-way ANOVA ---&quot;)
+
+print(&quot;\nPurpose:&quot;)
+print(&quot;To compare the mean sepal length among setosa, versicolor, and virginica species.&quot;)
+
+print(&quot;\nNull Hypothesis H0:&quot;)
+print(&quot;Mean sepal length of all three species is equal.&quot;)
+
+print(&quot;\nAlternative Hypothesis H1:&quot;)
+print(&quot;At least one species has a different mean sepal length.&quot;)
+
+print(&quot;\nF-statistic:&quot;, f_stat)
+print(&quot;P-value:&quot;, anova_p)
+
+explain_decision(anova_p, alpha)
+
+if anova_p &lt; alpha:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;There is a significant difference in mean sepal length among the three species.&quot;)
+else:
+    print(&quot;\nFinal Conclusion:&quot;)
+    print(&quot;There is no significant difference in mean sepal length among the three species.&quot;)
+
+
+# Visual for ANOVA
+plt.figure(figsize=(8, 5))
+plt.boxplot(
+    [setosa_sepal, versicolor_sepal, virginica_sepal],
+    labels=[&quot;Setosa&quot;, &quot;Versicolor&quot;, &quot;Virginica&quot;]
+)
+plt.title(&quot;ANOVA: Sepal Length Comparison Among Species&quot;)
+plt.xlabel(&quot;Species&quot;)
+plt.ylabel(&quot;Sepal Length (cm)&quot;)
+plt.text(
+    1.2,
+    max(df[&quot;sepal length (cm)&quot;]) - 0.2,
+    f&quot;p-value = {anova_p:.6f}&quot;,
+    fontsize=10
+)
+plt.show()
+
+
+# ---------------------------------------------------
+# Final Summary
+# ---------------------------------------------------
+
+print(&quot;\nOverall Conclusion:&quot;)
+print(&quot;Hypothesis testing was successfully performed using t-test, chi-square test, and ANOVA.&quot;)
+print(&quot;Visualizations helped compare the groups clearly.&quot;)
+print(&quot;The decision for each test was made by comparing the p-value with the significance level 0.05.&quot;)
+
+print(&quot;\nImportant Rule:&quot;)
+print(&quot;If p-value &lt; 0.05, reject H0.&quot;)
+print(&quot;If p-value &gt;= 0.05, fail to reject H0.&quot;)
+print(&quot;We do not say &#x27;accept H0&#x27;; we say &#x27;fail to reject H0&#x27;.&quot;)</pre>
+</div>
+<div class="page" id="p6">
+<p class="nav"><a href="#">Contents</a> <a href="#p5">Previous</a> <a href="#p7">Next</a></p>
+<h2>Experiment 6: Bootstrap Confidence Intervals and Permutation Tests</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre># Experiment 6: Bootstrap Confidence Intervals and Permutation Tests
+# Dataset: Iris Dataset
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+# Set random seed
+np.random.seed(42)
+
+# Significance level
+alpha = 0.05
+
+# Step 1: Load Iris dataset
+iris = load_iris()
+
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+
+df[&quot;species&quot;] = iris.target
+
+df[&quot;species&quot;] = df[&quot;species&quot;].map({
+    0: &quot;setosa&quot;,
+    1: &quot;versicolor&quot;,
+    2: &quot;virginica&quot;
+})
+
+print(&quot;First 5 rows of Iris Dataset:&quot;)
+print(df.head())
+
+print(&quot;\nSpecies Count:&quot;)
+print(df[&quot;species&quot;].value_counts())
+
+
+# ---------------------------------------------------
+# Part A: Bootstrap Confidence Interval
+# ---------------------------------------------------
+
+print(&quot;\n--- Bootstrap Confidence Interval ---&quot;)
+
+data = df[&quot;petal length (cm)&quot;]
+
+n_bootstrap = 1000
+bootstrap_means = []
+
+for i in range(n_bootstrap):
+    bootstrap_sample = np.random.choice(data, size=len(data), replace=True)
+    bootstrap_means.append(np.mean(bootstrap_sample))
+
+bootstrap_means = np.array(bootstrap_means)
+
+lower_limit = np.percentile(bootstrap_means, 2.5)
+upper_limit = np.percentile(bootstrap_means, 97.5)
+
+print(&quot;\nOriginal Mean Petal Length:&quot;, np.mean(data))
+print(&quot;95% Bootstrap Confidence Interval:&quot;)
+print(&quot;Lower Limit:&quot;, lower_limit)
+print(&quot;Upper Limit:&quot;, upper_limit)
+
+print(&quot;\nExplanation:&quot;)
+print(&quot;Bootstrap sampling creates many samples from the original data with replacement.&quot;)
+print(&quot;The mean is calculated for each bootstrap sample.&quot;)
+print(&quot;The 2.5th and 97.5th percentiles give the 95% confidence interval.&quot;)
+
+
+# Visual: Bootstrap Distribution
+plt.figure(figsize=(8, 5))
+plt.hist(bootstrap_means, bins=30, edgecolor=&quot;black&quot;)
+plt.axvline(lower_limit, linestyle=&quot;--&quot;, label=&quot;Lower 95% CI&quot;)
+plt.axvline(upper_limit, linestyle=&quot;--&quot;, label=&quot;Upper 95% CI&quot;)
+plt.axvline(np.mean(data), linestyle=&quot;-&quot;, label=&quot;Original Mean&quot;)
+plt.title(&quot;Bootstrap Distribution of Mean Petal Length&quot;)
+plt.xlabel(&quot;Bootstrap Sample Mean&quot;)
+plt.ylabel(&quot;Frequency&quot;)
+plt.legend()
+plt.show()
+
+
+# ---------------------------------------------------
+# Part B: Permutation Test
+# ---------------------------------------------------
+
+print(&quot;\n--- Permutation Test ---&quot;)
+
+versicolor = df[df[&quot;species&quot;] == &quot;versicolor&quot;][&quot;petal length (cm)&quot;].values
+virginica = df[df[&quot;species&quot;] == &quot;virginica&quot;][&quot;petal length (cm)&quot;].values
+
+observed_difference = np.mean(virginica) - np.mean(versicolor)
+
+print(&quot;\nPurpose:&quot;)
+print(&quot;To test whether there is a significant difference in mean petal length&quot;)
+print(&quot;between versicolor and virginica species.&quot;)
+
+print(&quot;\nNull Hypothesis H0:&quot;)
+print(&quot;There is no difference in mean petal length between versicolor and virginica.&quot;)
+
+print(&quot;\nAlternative Hypothesis H1:&quot;)
+print(&quot;There is a significant difference in mean petal length between versicolor and virginica.&quot;)
+
+print(&quot;\nObserved Difference in Means:&quot;, observed_difference)
+
+combined = np.concatenate([versicolor, virginica])
+
+n_permutations = 1000
+permutation_differences = []
+
+for i in range(n_permutations):
+    np.random.shuffle(combined)
+
+    new_group1 = combined[:len(versicolor)]
+    new_group2 = combined[len(versicolor):]
+
+    diff = np.mean(new_group2) - np.mean(new_group1)
+    permutation_differences.append(diff)
+
+permutation_differences = np.array(permutation_differences)
+
+p_value = np.mean(np.abs(permutation_differences) &gt;= abs(observed_difference))
+
+print(&quot;\nPermutation Test P-value:&quot;, p_value)
+
+print(&quot;\nDecision Explanation:&quot;)
+
+if p_value &lt; alpha:
+    print(f&quot;Since the p-value ({p_value}) is less than the significance level ({alpha}),&quot;)
+    print(&quot;we reject the Null Hypothesis H0.&quot;)
+    print(&quot;This means the difference in mean petal length is statistically significant.&quot;)
+    print(&quot;There is enough evidence to support the Alternative Hypothesis H1.&quot;)
+else:
+    print(f&quot;Since the p-value ({p_value}) is greater than or equal to the significance level ({alpha}),&quot;)
+    print(&quot;we fail to reject the Null Hypothesis H0.&quot;)
+    print(&quot;This means the difference in mean petal length is not statistically significant.&quot;)
+    print(&quot;There is not enough evidence to support the Alternative Hypothesis H1.&quot;)
+
+
+# Visual: Permutation Distribution
+plt.figure(figsize=(8, 5))
+plt.hist(permutation_differences, bins=30, edgecolor=&quot;black&quot;)
+plt.axvline(observed_difference, linestyle=&quot;--&quot;, label=&quot;Observed Difference&quot;)
+plt.axvline(-observed_difference, linestyle=&quot;--&quot;, label=&quot;Negative Observed Difference&quot;)
+plt.title(&quot;Permutation Test Distribution&quot;)
+plt.xlabel(&quot;Difference in Means&quot;)
+plt.ylabel(&quot;Frequency&quot;)
+plt.legend()
+plt.show()
+
+
+# ---------------------------------------------------
+# Final Conclusion
+# ---------------------------------------------------
+
+print(&quot;\nFinal Conclusion:&quot;)
+print(&quot;Bootstrap confidence interval was used to estimate the mean petal length.&quot;)
+print(&quot;Permutation test was used to compare petal length between versicolor and virginica.&quot;)
+print(&quot;The decision was made by comparing the p-value with the significance level 0.05.&quot;)
+print(&quot;Experiment completed successfully.&quot;)</pre>
+</div>
+<div class="page" id="p7">
+<p class="nav"><a href="#">Contents</a> <a href="#p6">Previous</a> <a href="#p8">Next</a></p>
+<h2>Experiment 7: MLE Estimation for Normal and Bernoulli Distributions</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre># Experiment 7: MLE Estimation for Normal and Bernoulli Distributions
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+
+# Set random seed
+np.random.seed(42)
+
+# ---------------------------------------------------
+# Part A: MLE for Normal Distribution
+# ---------------------------------------------------
+
+print(&quot;--- MLE for Normal Distribution ---&quot;)
+
+# Create sample numerical data
+normal_data = np.random.normal(loc=50, scale=10, size=100)
+
+print(&quot;\nSample Normal Data:&quot;)
+print(normal_data[:10])
+
+# MLE estimation
+mle_mean = np.mean(normal_data)
+mle_variance = np.mean((normal_data - mle_mean) ** 2)
+mle_std = np.sqrt(mle_variance)
+
+print(&quot;\nMLE Estimated Mean:&quot;, mle_mean)
+print(&quot;MLE Estimated Variance:&quot;, mle_variance)
+print(&quot;MLE Estimated Standard Deviation:&quot;, mle_std)
+
+print(&quot;\nExplanation:&quot;)
+print(&quot;For a Normal distribution, MLE estimates the mean as the sample average.&quot;)
+print(&quot;The variance is estimated as the average squared difference from the mean.&quot;)
+
+# Visualization of Normal Distribution
+x = np.linspace(min(normal_data), max(normal_data), 100)
+pdf = norm.pdf(x, mle_mean, mle_std)
+
+plt.figure(figsize=(8, 5))
+plt.hist(normal_data, bins=15, density=True, edgecolor=&quot;black&quot;, alpha=0.7)
+plt.plot(x, pdf, linewidth=2)
+plt.title(&quot;MLE Fitted Normal Distribution&quot;)
+plt.xlabel(&quot;Values&quot;)
+plt.ylabel(&quot;Density&quot;)
+plt.show()
+
+
+# ---------------------------------------------------
+# Part B: MLE for Bernoulli Distribution
+# ---------------------------------------------------
+
+print(&quot;\n--- MLE for Bernoulli Distribution ---&quot;)
+
+# Create binary data
+# 1 = Success, 0 = Failure
+
+bernoulli_data = np.array([
+    1, 0, 1, 1, 0,
+    1, 0, 1, 1, 1,
+    0, 1, 0, 1, 1,
+    0, 1, 1, 0, 1
+])
+
+print(&quot;\nBernoulli Data:&quot;)
+print(bernoulli_data)
+
+# MLE estimation
+successes = np.sum(bernoulli_data)
+total_trials = len(bernoulli_data)
+mle_p = successes / total_trials
+
+print(&quot;\nNumber of Successes:&quot;, successes)
+print(&quot;Total Trials:&quot;, total_trials)
+print(&quot;MLE Estimated Probability of Success:&quot;, mle_p)
+
+print(&quot;\nExplanation:&quot;)
+print(&quot;For a Bernoulli distribution, MLE estimates the probability of success&quot;)
+print(&quot;as the number of successes divided by the total number of trials.&quot;)
+
+# Visualization of Bernoulli Distribution
+labels = [&quot;Failure (0)&quot;, &quot;Success (1)&quot;]
+counts = [
+    np.sum(bernoulli_data == 0),
+    np.sum(bernoulli_data == 1)
+]
+
+plt.figure(figsize=(6, 5))
+plt.bar(labels, counts, edgecolor=&quot;black&quot;)
+plt.title(&quot;Bernoulli Distribution&quot;)
+plt.xlabel(&quot;Outcome&quot;)
+plt.ylabel(&quot;Count&quot;)
+plt.show()
+
+
+# ---------------------------------------------------
+# Final Conclusion
+# ---------------------------------------------------
+
+print(&quot;\nFinal Conclusion:&quot;)
+print(&quot;Maximum Likelihood Estimation was successfully applied.&quot;)
+print(&quot;For the Normal distribution, mean and variance were estimated.&quot;)
+print(&quot;For the Bernoulli distribution, probability of success was estimated.&quot;)
+print(&quot;Experiment completed successfully.&quot;)</pre>
+</div>
+<div class="page" id="p8">
+<p class="nav"><a href="#">Contents</a> <a href="#p7">Previous</a> <a href="#p9">Next</a></p>
+<h2>Experiment 8: Linear Regression and Diagnostics</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre># Experiment 8: Linear Regression and Diagnostics
+# VIF, Residual Plots, Cook&#x27;s Distance
+
+# Import required libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import load_diabetes
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+
+import statsmodels.api as sm
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+
+# ---------------------------------------------------
+# Step 1: Load Dataset
+# ---------------------------------------------------
+
+diabetes = load_diabetes()
+
+df = pd.DataFrame(diabetes.data, columns=diabetes.feature_names)
+df[&quot;target&quot;] = diabetes.target
+
+print(&quot;First 5 rows of dataset:&quot;)
+print(df.head())
+
+print(&quot;\nShape of dataset:&quot;)
+print(df.shape)
+
+print(&quot;\nDataset information:&quot;)
+print(df.info())
+
+print(&quot;\nDescriptive Statistics:&quot;)
+print(df.describe())
+
+
+# ---------------------------------------------------
+# Step 2: Define Independent and Dependent Variables
+# ---------------------------------------------------
+
+X = df.drop(&quot;target&quot;, axis=1)
+y = df[&quot;target&quot;]
+
+print(&quot;\nIndependent Variables:&quot;)
+print(X.head())
+
+print(&quot;\nDependent Variable:&quot;)
+print(y.head())
+
+
+# ---------------------------------------------------
+# Step 3: Train-Test Split
+# ---------------------------------------------------
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+print(&quot;\nTraining data size:&quot;, X_train.shape)
+print(&quot;Testing data size:&quot;, X_test.shape)
+
+
+# ---------------------------------------------------
+# Step 4: Train Linear Regression Model
+# ---------------------------------------------------
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+print(&quot;\nModel Coefficients:&quot;)
+for feature, coef in zip(X.columns, model.coef_):
+    print(feature, &quot;:&quot;, coef)
+
+print(&quot;\nIntercept:&quot;, model.intercept_)
+
+
+# ---------------------------------------------------
+# Step 5: Prediction
+# ---------------------------------------------------
+
+y_pred = model.predict(X_test)
+
+result_df = pd.DataFrame({
+    &quot;Actual&quot;: y_test.values,
+    &quot;Predicted&quot;: y_pred
+})
+
+print(&quot;\nActual vs Predicted Values:&quot;)
+print(result_df.head())
+
+
+# ---------------------------------------------------
+# Step 6: Model Evaluation
+# ---------------------------------------------------
+
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(&quot;\nModel Evaluation Metrics:&quot;)
+print(&quot;Mean Squared Error:&quot;, mse)
+print(&quot;Root Mean Squared Error:&quot;, rmse)
+print(&quot;Mean Absolute Error:&quot;, mae)
+print(&quot;R2 Score:&quot;, r2)
+
+
+# ---------------------------------------------------
+# Step 7: Actual vs Predicted Plot
+# ---------------------------------------------------
+
+plt.figure(figsize=(7, 5))
+plt.scatter(y_test, y_pred)
+plt.xlabel(&quot;Actual Values&quot;)
+plt.ylabel(&quot;Predicted Values&quot;)
+plt.title(&quot;Actual vs Predicted Values&quot;)
+plt.show()
+
+
+# ---------------------------------------------------
+# Step 8: Residual Analysis
+# ---------------------------------------------------
+
+residuals = y_test - y_pred
+
+print(&quot;\nResiduals:&quot;)
+print(residuals.head())
+
+plt.figure(figsize=(7, 5))
+plt.scatter(y_pred, residuals)
+plt.axhline(y=0, linestyle=&quot;--&quot;)
+plt.xlabel(&quot;Predicted Values&quot;)
+plt.ylabel(&quot;Residuals&quot;)
+plt.title(&quot;Residual Plot&quot;)
+plt.show()
+
+plt.figure(figsize=(7, 5))
+plt.hist(residuals, bins=20, edgecolor=&quot;black&quot;)
+plt.xlabel(&quot;Residuals&quot;)
+plt.ylabel(&quot;Frequency&quot;)
+plt.title(&quot;Histogram of Residuals&quot;)
+plt.show()
+
+
+# ---------------------------------------------------
+# Step 9: VIF for Multicollinearity Detection
+# ---------------------------------------------------
+
+X_vif = sm.add_constant(X)
+
+vif_data = pd.DataFrame()
+vif_data[&quot;Feature&quot;] = X_vif.columns
+vif_data[&quot;VIF&quot;] = [
+    variance_inflation_factor(X_vif.values, i)
+    for i in range(X_vif.shape[1])
+]
+
+print(&quot;\nVariance Inflation Factor:&quot;)
+print(vif_data)
+
+print(&quot;\nVIF Interpretation:&quot;)
+print(&quot;VIF = 1 means no multicollinearity.&quot;)
+print(&quot;VIF between 1 and 5 means moderate correlation.&quot;)
+print(&quot;VIF greater than 5 or 10 indicates high multicollinearity.&quot;)
+
+
+# ---------------------------------------------------
+# Step 10: Cook&#x27;s Distance
+# ---------------------------------------------------
+
+X_sm = sm.add_constant(X)
+ols_model = sm.OLS(y, X_sm).fit()
+
+influence = ols_model.get_influence()
+cooks_distance = influence.cooks_distance[0]
+
+print(&quot;\nCook&#x27;s Distance Values:&quot;)
+print(cooks_distance[:10])
+
+threshold = 4 / len(df)
+
+print(&quot;\nCook&#x27;s Distance Threshold:&quot;, threshold)
+
+influential_points = np.where(cooks_distance &gt; threshold)[0]
+
+print(&quot;\nInfluential Data Points:&quot;)
+print(influential_points)
+
+print(&quot;\nNumber of Influential Points:&quot;, len(influential_points))
+
+
+# Cook&#x27;s Distance Plot
+plt.figure(figsize=(10, 5))
+plt.stem(np.arange(len(cooks_distance)), cooks_distance, markerfmt=&quot;,&quot;)
+plt.axhline(y=threshold, linestyle=&quot;--&quot;)
+plt.xlabel(&quot;Observation Index&quot;)
+plt.ylabel(&quot;Cook&#x27;s Distance&quot;)
+plt.title(&quot;Cook&#x27;s Distance Plot&quot;)
+plt.show()
+
+
+# ---------------------------------------------------
+# Step 11: Model Summary using Statsmodels
+# ---------------------------------------------------
+
+print(&quot;\nOLS Regression Summary:&quot;)
+print(ols_model.summary())
+
+
+# ---------------------------------------------------
+# Final Conclusion
+# ---------------------------------------------------
+
+print(&quot;\nFinal Conclusion:&quot;)
+print(&quot;Linear Regression was successfully performed on the dataset.&quot;)
+print(&quot;The model was evaluated using MSE, RMSE, MAE, and R2 score.&quot;)
+print(&quot;Residual plots were used to check the error pattern.&quot;)
+print(&quot;VIF was used to detect multicollinearity among independent variables.&quot;)
+print(&quot;Cook&#x27;s Distance was used to identify influential observations.&quot;)
+print(&quot;Experiment completed successfully.&quot;)</pre>
+</div>
+<div class="page" id="p9">
+<p class="nav"><a href="#">Contents</a> <a href="#p8">Previous</a> <a href="#p10">Next</a></p>
+<h2>Experiment 9: Ridge, Lasso, Elastic Net with Hyperparameter Tuning</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre># Experiment 9: Ridge, Lasso, Elastic Net with Hyperparameter Tuning
+
+# Import required libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import load_diabetes
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+
+from sklearn.linear_model import Ridge, Lasso, ElasticNet
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+
+
+# ---------------------------------------------------
+# Step 1: Load Dataset
+# ---------------------------------------------------
+
+diabetes = load_diabetes()
+
+df = pd.DataFrame(diabetes.data, columns=diabetes.feature_names)
+df[&quot;target&quot;] = diabetes.target
+
+print(&quot;First 5 rows of dataset:&quot;)
+print(df.head())
+
+print(&quot;\nShape of dataset:&quot;)
+print(df.shape)
+
+
+# ---------------------------------------------------
+# Step 2: Define Features and Target
+# ---------------------------------------------------
+
+X = df.drop(&quot;target&quot;, axis=1)
+y = df[&quot;target&quot;]
+
+
+# ---------------------------------------------------
+# Step 3: Train-Test Split
+# ---------------------------------------------------
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+print(&quot;\nTraining Data Shape:&quot;, X_train.shape)
+print(&quot;Testing Data Shape:&quot;, X_test.shape)
+
+
+# ---------------------------------------------------
+# Step 4: Function for Model Evaluation
+# ---------------------------------------------------
+
+def evaluate_model(model, X_test, y_test):
+    y_pred = model.predict(X_test)
+
+    mse = mean_squared_error(y_test, y_pred)
+    rmse = np.sqrt(mse)
+    mae = mean_absolute_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+
+    return mse, rmse, mae, r2, y_pred
+
+
+# ---------------------------------------------------
+# Step 5: Ridge Regression with Hyperparameter Tuning
+# ---------------------------------------------------
+
+ridge_pipeline = Pipeline([
+    (&quot;scaler&quot;, StandardScaler()),
+    (&quot;ridge&quot;, Ridge())
+])
+
+ridge_params = {
+    &quot;ridge__alpha&quot;: [0.001, 0.01, 0.1, 1, 10, 100]
+}
+
+ridge_grid = GridSearchCV(
+    ridge_pipeline,
+    ridge_params,
+    cv=5,
+    scoring=&quot;r2&quot;
+)
+
+ridge_grid.fit(X_train, y_train)
+
+print(&quot;\nBest Ridge Parameters:&quot;)
+print(ridge_grid.best_params_)
+
+
+# ---------------------------------------------------
+# Step 6: Lasso Regression with Hyperparameter Tuning
+# ---------------------------------------------------
+
+lasso_pipeline = Pipeline([
+    (&quot;scaler&quot;, StandardScaler()),
+    (&quot;lasso&quot;, Lasso(max_iter=10000))
+])
+
+lasso_params = {
+    &quot;lasso__alpha&quot;: [0.001, 0.01, 0.1, 1, 10, 100]
+}
+
+lasso_grid = GridSearchCV(
+    lasso_pipeline,
+    lasso_params,
+    cv=5,
+    scoring=&quot;r2&quot;
+)
+
+lasso_grid.fit(X_train, y_train)
+
+print(&quot;\nBest Lasso Parameters:&quot;)
+print(lasso_grid.best_params_)
+
+
+# ---------------------------------------------------
+# Step 7: Elastic Net with Hyperparameter Tuning
+# ---------------------------------------------------
+
+elastic_pipeline = Pipeline([
+    (&quot;scaler&quot;, StandardScaler()),
+    (&quot;elasticnet&quot;, ElasticNet(max_iter=10000))
+])
+
+elastic_params = {
+    &quot;elasticnet__alpha&quot;: [0.001, 0.01, 0.1, 1, 10],
+    &quot;elasticnet__l1_ratio&quot;: [0.1, 0.3, 0.5, 0.7, 0.9]
+}
+
+elastic_grid = GridSearchCV(
+    elastic_pipeline,
+    elastic_params,
+    cv=5,
+    scoring=&quot;r2&quot;
+)
+
+elastic_grid.fit(X_train, y_train)
+
+print(&quot;\nBest Elastic Net Parameters:&quot;)
+print(elastic_grid.best_params_)
+
+
+# ---------------------------------------------------
+# Step 8: Evaluate All Models
+# ---------------------------------------------------
+
+models = {
+    &quot;Ridge&quot;: ridge_grid.best_estimator_,
+    &quot;Lasso&quot;: lasso_grid.best_estimator_,
+    &quot;Elastic Net&quot;: elastic_grid.best_estimator_
+}
+
+results = []
+
+predictions = {}
+
+for name, model in models.items():
+    mse, rmse, mae, r2, y_pred = evaluate_model(model, X_test, y_test)
+
+    predictions[name] = y_pred
+
+    results.append({
+        &quot;Model&quot;: name,
+        &quot;MSE&quot;: mse,
+        &quot;RMSE&quot;: rmse,
+        &quot;MAE&quot;: mae,
+        &quot;R2 Score&quot;: r2
+    })
+
+results_df = pd.DataFrame(results)
+
+print(&quot;\nModel Performance Comparison:&quot;)
+print(results_df)
+
+
+# ---------------------------------------------------
+# Step 9: Visualization of R2 Score
+# ---------------------------------------------------
+
+plt.figure(figsize=(7, 5))
+plt.bar(results_df[&quot;Model&quot;], results_df[&quot;R2 Score&quot;], edgecolor=&quot;black&quot;)
+plt.title(&quot;R2 Score Comparison&quot;)
+plt.xlabel(&quot;Model&quot;)
+plt.ylabel(&quot;R2 Score&quot;)
+plt.show()
+
+
+# ---------------------------------------------------
+# Step 10: Visualization of RMSE
+# ---------------------------------------------------
+
+plt.figure(figsize=(7, 5))
+plt.bar(results_df[&quot;Model&quot;], results_df[&quot;RMSE&quot;], edgecolor=&quot;black&quot;)
+plt.title(&quot;RMSE Comparison&quot;)
+plt.xlabel(&quot;Model&quot;)
+plt.ylabel(&quot;RMSE&quot;)
+plt.show()
+
+
+# ---------------------------------------------------
+# Step 11: Actual vs Predicted Values
+# ---------------------------------------------------
+
+for name, y_pred in predictions.items():
+    plt.figure(figsize=(7, 5))
+    plt.scatter(y_test, y_pred)
+    plt.xlabel(&quot;Actual Values&quot;)
+    plt.ylabel(&quot;Predicted Values&quot;)
+    plt.title(f&quot;Actual vs Predicted Values - {name}&quot;)
+    plt.show()
+
+
+# ---------------------------------------------------
+# Step 12: Coefficient Comparison
+# ---------------------------------------------------
+
+feature_names = X.columns
+
+ridge_coefficients = ridge_grid.best_estimator_.named_steps[&quot;ridge&quot;].coef_
+lasso_coefficients = lasso_grid.best_estimator_.named_steps[&quot;lasso&quot;].coef_
+elastic_coefficients = elastic_grid.best_estimator_.named_steps[&quot;elasticnet&quot;].coef_
+
+coef_df = pd.DataFrame({
+    &quot;Feature&quot;: feature_names,
+    &quot;Ridge&quot;: ridge_coefficients,
+    &quot;Lasso&quot;: lasso_coefficients,
+    &quot;Elastic Net&quot;: elastic_coefficients
+})
+
+print(&quot;\nCoefficient Comparison:&quot;)
+print(coef_df)
+
+
+# ---------------------------------------------------
+# Step 13: Coefficient Visualization
+# ---------------------------------------------------
+
+coef_df.set_index(&quot;Feature&quot;).plot(kind=&quot;bar&quot;, figsize=(10, 6))
+plt.title(&quot;Coefficient Comparison of Ridge, Lasso, and Elastic Net&quot;)
+plt.xlabel(&quot;Features&quot;)
+plt.ylabel(&quot;Coefficient Value&quot;)
+plt.show()
+
+
+# ---------------------------------------------------
+# Step 14: Final Conclusion
+# ---------------------------------------------------
+
+best_model = results_df.loc[results_df[&quot;R2 Score&quot;].idxmax(), &quot;Model&quot;]
+
+print(&quot;\nFinal Conclusion:&quot;)
+print(&quot;Ridge, Lasso, and Elastic Net regression models were successfully implemented.&quot;)
+print(&quot;Hyperparameter tuning was performed using GridSearchCV.&quot;)
+print(&quot;Models were evaluated using MSE, RMSE, MAE, and R2 score.&quot;)
+print(&quot;Best performing model based on R2 score:&quot;, best_model)
+print(&quot;Regularization helps reduce overfitting by controlling model coefficients.&quot;)
+print(&quot;Lasso can shrink some coefficients to zero and helps in feature selection.&quot;)
+print(&quot;Elastic Net combines Ridge and Lasso regularization.&quot;)</pre>
+</div>
+<div class="page" id="p10">
+<p class="nav"><a href="#">Contents</a> <a href="#p9">Previous</a> </p>
+<h2>Experiment 10: Classification Models</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre># Experiment 10: Classification Models
+# Logistic Regression, KNN, Naive Bayes, ROC Analysis
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    classification_report,
+    roc_curve,
+    roc_auc_score
+)
+
+# Step 1: Load Breast Cancer Wisconsin Dataset
+cancer = load_breast_cancer()
+
+df = pd.DataFrame(cancer.data, columns=cancer.feature_names)
+df[&quot;target&quot;] = cancer.target
+
+print(&quot;First 5 rows of dataset:&quot;)
+print(df.head())
+
+print(&quot;\nShape of dataset:&quot;)
+print(df.shape)
+
+print(&quot;\nTarget Names:&quot;)
+print(cancer.target_names)
+
+print(&quot;\nTarget Count:&quot;)
+print(df[&quot;target&quot;].value_counts())
+
+
+# Step 2: Define Features and Target
+X = df.drop(&quot;target&quot;, axis=1)
+y = df[&quot;target&quot;]
+
+
+# Step 3: Split Dataset into Training and Testing Sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42
+)
+
+print(&quot;\nTraining Data Shape:&quot;, X_train.shape)
+print(&quot;Testing Data Shape:&quot;, X_test.shape)
+
+
+# Step 4: Feature Scaling
+scaler = StandardScaler()
+
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+
+# Step 5: Create Classification Models
+models = {
+    &quot;Logistic Regression&quot;: LogisticRegression(max_iter=10000),
+    &quot;KNN&quot;: KNeighborsClassifier(n_neighbors=5),
+    &quot;Naive Bayes&quot;: GaussianNB()
+}
+
+results = []
+
+
+# Step 6: Train and Evaluate Models
+plt.figure(figsize=(8, 6))
+
+for name, model in models.items():
+
+    # Train model
+    model.fit(X_train_scaled, y_train)
+
+    # Predict class labels
+    y_pred = model.predict(X_test_scaled)
+
+    # Predict probabilities for ROC curve
+    y_prob = model.predict_proba(X_test_scaled)[:, 1]
+
+    # Evaluation metrics
+    accuracy = accuracy_score(y_test, y_pred)
+    auc_score = roc_auc_score(y_test, y_prob)
+
+    results.append({
+        &quot;Model&quot;: name,
+        &quot;Accuracy&quot;: accuracy,
+        &quot;ROC-AUC Score&quot;: auc_score
+    })
+
+    print(&quot;\n--------------------------------------&quot;)
+    print(&quot;Model:&quot;, name)
+    print(&quot;--------------------------------------&quot;)
+
+    print(&quot;\nAccuracy Score:&quot;)
+    print(accuracy)
+
+    print(&quot;\nConfusion Matrix:&quot;)
+    print(confusion_matrix(y_test, y_pred))
+
+    print(&quot;\nClassification Report:&quot;)
+    print(classification_report(y_test, y_pred))
+
+    print(&quot;\nROC-AUC Score:&quot;)
+    print(auc_score)
+
+    # ROC Curve values
+    fpr, tpr, thresholds = roc_curve(y_test, y_prob)
+
+    # Plot ROC Curve
+    plt.plot(fpr, tpr, label=f&quot;{name} AUC = {auc_score:.3f}&quot;)
+
+
+# Step 7: ROC Curve Visualization
+plt.plot([0, 1], [0, 1], linestyle=&quot;--&quot;, label=&quot;Random Classifier&quot;)
+plt.xlabel(&quot;False Positive Rate&quot;)
+plt.ylabel(&quot;True Positive Rate&quot;)
+plt.title(&quot;ROC Curve Comparison&quot;)
+plt.legend()
+plt.show()
+
+
+# Step 8: Model Performance Comparison
+results_df = pd.DataFrame(results)
+
+print(&quot;\nModel Performance Comparison:&quot;)
+print(results_df)
+
+
+# Step 9: Accuracy Comparison Bar Chart
+plt.figure(figsize=(7, 5))
+plt.bar(results_df[&quot;Model&quot;], results_df[&quot;Accuracy&quot;], edgecolor=&quot;black&quot;)
+plt.title(&quot;Accuracy Comparison&quot;)
+plt.xlabel(&quot;Model&quot;)
+plt.ylabel(&quot;Accuracy&quot;)
+plt.show()
+
+
+# Step 10: ROC-AUC Score Comparison Bar Chart
+plt.figure(figsize=(7, 5))
+plt.bar(results_df[&quot;Model&quot;], results_df[&quot;ROC-AUC Score&quot;], edgecolor=&quot;black&quot;)
+plt.title(&quot;ROC-AUC Score Comparison&quot;)
+plt.xlabel(&quot;Model&quot;)
+plt.ylabel(&quot;ROC-AUC Score&quot;)
+plt.show()
+
+
+# Step 11: Final Conclusion
+best_model_accuracy = results_df.loc[results_df[&quot;Accuracy&quot;].idxmax(), &quot;Model&quot;]
+best_model_auc = results_df.loc[results_df[&quot;ROC-AUC Score&quot;].idxmax(), &quot;Model&quot;]
+
+print(&quot;\nFinal Conclusion:&quot;)
+print(&quot;Classification models were successfully implemented on the Breast Cancer Wisconsin dataset.&quot;)
+print(&quot;Logistic Regression, KNN, and Naive Bayes models were trained and evaluated.&quot;)
+print(&quot;The models were compared using accuracy, confusion matrix, classification report, and ROC-AUC score.&quot;)
+print(&quot;Best model based on Accuracy:&quot;, best_model_accuracy)
+print(&quot;Best model based on ROC-AUC Score:&quot;, best_model_auc)
+print(&quot;ROC curve helps to compare the classification performance of different models.&quot;)</pre>
+</div>
+<script>
+function toggleTheme(){
+  var light = document.body.classList.toggle('light');
+  document.getElementById('themeBtn').textContent = light ? 'Switch to black' : 'Switch to white';
+}
+function copyCode(btn){
+  var text = btn.parentNode.querySelector('pre').textContent;
+  var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1500); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+  } else { fallback(text, done); }
+}
+function fallback(text, done){
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  done();
+}
+</script>
+</body>
+</html>
