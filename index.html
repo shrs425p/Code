@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>All Experiments</title>
+<style>
+body{background:#000;color:#fff}
+a{color:#fff}
+button{background:#000;color:#fff;border:1px solid #fff}
+body.light{background:#fff;color:#000}
+body.light a{color:#000}
+body.light button{background:#fff;color:#000;border:1px solid #000}
+.page{display:none}
+#contents{display:block}
+body:has(.page:target) #contents{display:none}
+.page:target{display:block}
+@media print{.page,#contents{display:block !important;page-break-after:always}.nav,button{display:none}body,body.light{background:#fff;color:#000}a,body.light a{color:#000}}
+</style>
+</head>
+<body>
+<p><button id="themeBtn" onclick="toggleTheme()">Switch to white</button></p>
+<div class="page" id="contents">
+<h1>All Experiments</h1>
+<ol>
+<li><a href="#p1">Practical 1: Exploratory Data Analysis (EDA)</a></li>
+<li><a href="#p2">Experiment 2: Data Preprocessing</a></li>
+<li><a href="#p3">Experiment 3: Sampling Methods</a></li>
+<li><a href="#p4">Experiment 4: Central Limit Theorem Demonstration</a></li>
+<li><a href="#p5">Experiment 5: Hypothesis Testing Using a t-Test</a></li>
+<li><a href="#p6">Experiment 6: Bootstrap Confidence Interval</a></li>
+<li><a href="#p7">Experiment 7: Linear Regression</a></li>
+<li><a href="#p8">Experiment 8: Logistic Regression Classification</a></li>
+<li><a href="#p9">Experiment 9: K-Nearest Neighbors (KNN) Classification</a></li>
+<li><a href="#p10">Experiment 10: PCA and K-Means Clustering</a></li>
+</ol>
+</div>
+<div class="page" id="p1">
+<p class="nav"><a href="#">Contents</a> <a href="#p2">Next</a></p>
+<h2>Practical 1: Exploratory Data Analysis (EDA)</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre>import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.datasets import load_iris
+
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df["species"] = pd.Series(iris.target).map(dict(enumerate(iris.target_names)))
+
+print("First 5 rows:\n", df.head())
+print("\nShape:", df.shape)
+
+# Descriptive statistics
+print("\nDescriptive statistics:\n", df.describe())
+print("\nMedian:\n", df.median(numeric_only=True))
+print("\nMode:\n", df.mode().iloc[0])
+
+# Missing values
+print("\nMissing values:\n", df.isnull().sum())
+
+# Histogram of every numerical feature
+features = df.drop("species", axis=1)
+features.hist(figsize=(10, 8), edgecolor="black")
+plt.suptitle("Histograms of Iris Features")
+plt.show()
+
+# Correlation matrix
+corr = features.corr()
+print("\nCorrelation matrix:\n", corr)
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr, annot=True, cmap="coolwarm")
+plt.title("Correlation Matrix")
+plt.show()
+
+print("\nConclusion: no missing values; petal length and petal width are strongly correlated.")</pre>
+</div>
+<div class="page" id="p2">
+<p class="nav"><a href="#">Contents</a> <a href="#p1">Previous</a> <a href="#p3">Next</a></p>
+<h2>Experiment 2: Data Preprocessing</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre>import numpy as np
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+
+# Sample dataset (replace with pd.read_csv("your_file.csv") if needed)
+df = pd.DataFrame({
+    "Name": ["Amit", "Riya", "Sahil", "Neha", "Raj", "Priya", "Karan", "Anjali"],
+    "Age": [21, 22, np.nan, 24, 23, np.nan, 25, 30],
+    "Gender": ["Male", "Female", "Male", "Female", np.nan, "Female", "Male", "Female"],
+    "City": ["Mumbai", "Pune", "Delhi", "Mumbai", "Pune", np.nan, "Delhi", "Mumbai"],
+    "Salary": [25000, 30000, 28000, np.nan, 35000, 32000, 31000, 40000],
+})
+df = df.drop("Name", axis=1)
+
+print("Missing values before:\n", df.isnull().sum())
+
+# 1. Handle missing values
+df["Age"] = df["Age"].fillna(df["Age"].median())
+df["Salary"] = df["Salary"].fillna(df["Salary"].median())
+df["Gender"] = df["Gender"].fillna(df["Gender"].mode()[0])
+df["City"] = df["City"].fillna(df["City"].mode()[0])
+print("\nMissing values after:\n", df.isnull().sum())
+
+# 2. Encode categorical variables
+df["Gender"] = LabelEncoder().fit_transform(df["Gender"])
+df = pd.get_dummies(df, columns=["City"], drop_first=True)
+print("\nAfter encoding:\n", df)
+
+# 3. Scale numerical features
+num_cols = ["Age", "Salary"]
+df[num_cols] = StandardScaler().fit_transform(df[num_cols])
+print("\nAfter scaling:\n", df)
+print("\nMean (about 0):\n", df[num_cols].mean().round(3))
+print("Std (1):\n", df[num_cols].std(ddof=0).round(3))</pre>
+</div>
+<div class="page" id="p3">
+<p class="nav"><a href="#">Contents</a> <a href="#p2">Previous</a> <a href="#p4">Next</a></p>
+<h2>Experiment 3: Sampling Methods</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre>import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df["species"] = pd.Series(iris.target).map(dict(enumerate(iris.target_names)))
+
+# Simple random sampling: 30 rows chosen purely by chance
+simple = df.sample(n=30, random_state=42)
+
+# Stratified sampling: 20% from each species (30 rows)
+stratified = df.groupby("species", group_keys=False).sample(frac=0.2, random_state=42)
+
+# Compare species proportions
+proportions = pd.DataFrame({
+    "Population": df["species"].value_counts(normalize=True),
+    "Simple random": simple["species"].value_counts(normalize=True),
+    "Stratified": stratified["species"].value_counts(normalize=True),
+})
+print("Species proportions:\n", proportions.round(3))
+
+# Compare feature means
+means = pd.DataFrame({
+    "Population": df.mean(numeric_only=True),
+    "Simple random": simple.mean(numeric_only=True),
+    "Stratified": stratified.mean(numeric_only=True),
+})
+print("\nFeature means:\n", means.round(3))
+
+proportions.plot(kind="bar", figsize=(8, 5), edgecolor="black")
+plt.title("Species Proportion: Population vs Samples")
+plt.ylabel("Proportion")
+plt.xticks(rotation=0)
+plt.show()
+
+print("\nConclusion: stratified sampling keeps every species at exactly 1/3,")
+print("while simple random sampling can over- or under-represent a species.")</pre>
+</div>
+<div class="page" id="p4">
+<p class="nav"><a href="#">Contents</a> <a href="#p3">Previous</a> <a href="#p5">Next</a></p>
+<h2>Experiment 4: Central Limit Theorem Demonstration</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre>import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+
+# Non-normal (exponential) population
+population = np.random.exponential(scale=2, size=10000)
+
+sample_sizes = [5, 30, 100]
+n_samples = 1000
+
+fig, axes = plt.subplots(1, 4, figsize=(16, 4))
+axes[0].hist(population, bins=50, edgecolor="black")
+axes[0].set_title("Population (exponential)")
+
+for ax, n in zip(axes[1:], sample_sizes):
+    sample_means = [np.random.choice(population, size=n).mean() for _ in range(n_samples)]
+    ax.hist(sample_means, bins=30, edgecolor="black")
+    ax.set_title(f"Sample means, n = {n}")
+    print(f"n = {n}: mean of means = {np.mean(sample_means):.3f}, std = {np.std(sample_means):.3f}")
+
+plt.tight_layout()
+plt.show()
+
+print("\nPopulation mean:", population.mean())
+print("Conclusion: as the sample size grows, the sample means become")
+print("approximately normal and their spread shrinks (Central Limit Theorem).")</pre>
+</div>
+<div class="page" id="p5">
+<p class="nav"><a href="#">Contents</a> <a href="#p4">Previous</a> <a href="#p6">Next</a></p>
+<h2>Experiment 5: Hypothesis Testing Using a t-Test</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre>import pandas as pd
+from scipy.stats import ttest_ind
+from sklearn.datasets import load_iris
+
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+df["species"] = pd.Series(iris.target).map(dict(enumerate(iris.target_names)))
+
+alpha = 0.05
+versicolor = df[df["species"] == "versicolor"]["petal length (cm)"]
+virginica = df[df["species"] == "virginica"]["petal length (cm)"]
+
+print("H0: mean petal length of versicolor and virginica is equal")
+print("H1: mean petal length of versicolor and virginica is different")
+
+t_stat, p_value = ttest_ind(versicolor, virginica)
+print("\nMean versicolor:", versicolor.mean())
+print("Mean virginica :", virginica.mean())
+print("t-statistic    :", t_stat)
+print("p-value        :", p_value)
+
+if p_value &lt; alpha:
+    print(f"\np-value &lt; {alpha}: reject H0.")
+    print("The difference in mean petal length is statistically significant.")
+else:
+    print(f"\np-value &gt;= {alpha}: fail to reject H0.")
+    print("There is not enough evidence of a difference in mean petal length.")</pre>
+</div>
+<div class="page" id="p6">
+<p class="nav"><a href="#">Contents</a> <a href="#p5">Previous</a> <a href="#p7">Next</a></p>
+<h2>Experiment 6: Bootstrap Confidence Interval</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+
+np.random.seed(42)
+
+iris = load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+data = df["petal length (cm)"].values
+
+n_bootstrap = 1000
+boot_means = np.array([
+    np.random.choice(data, size=len(data), replace=True).mean()
+    for _ in range(n_bootstrap)
+])
+
+lower = np.percentile(boot_means, 2.5)
+upper = np.percentile(boot_means, 97.5)
+
+print("Original sample mean:", data.mean())
+print(f"95% bootstrap confidence interval: ({lower:.4f}, {upper:.4f})")
+
+plt.figure(figsize=(8, 5))
+plt.hist(boot_means, bins=30, edgecolor="black")
+plt.axvline(lower, linestyle="--", color="red", label="2.5th percentile")
+plt.axvline(upper, linestyle="--", color="red", label="97.5th percentile")
+plt.axvline(data.mean(), color="green", label="Sample mean")
+plt.title("Bootstrap Distribution of Mean Petal Length")
+plt.xlabel("Bootstrap sample mean")
+plt.ylabel("Frequency")
+plt.legend()
+plt.show()</pre>
+</div>
+<div class="page" id="p7">
+<p class="nav"><a href="#">Contents</a> <a href="#p6">Previous</a> <a href="#p8">Next</a></p>
+<h2>Experiment 7: Linear Regression</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre>import matplotlib.pyplot as plt
+from sklearn.datasets import load_diabetes
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
+
+X, y = load_diabetes(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+print("MAE:", mean_absolute_error(y_test, y_pred))
+print("MSE:", mean_squared_error(y_test, y_pred))
+print("R2 :", r2_score(y_test, y_pred))
+
+plt.figure(figsize=(6, 5))
+plt.scatter(y_test, y_pred)
+plt.plot([y.min(), y.max()], [y.min(), y.max()], "r--")
+plt.xlabel("Actual")
+plt.ylabel("Predicted")
+plt.title("Actual vs Predicted")
+plt.show()</pre>
+</div>
+<div class="page" id="p8">
+<p class="nav"><a href="#">Contents</a> <a href="#p7">Previous</a> <a href="#p9">Next</a></p>
+<h2>Experiment 8: Logistic Regression Classification</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre>from sklearn.datasets import load_breast_cancer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (accuracy_score, confusion_matrix, f1_score,
+                             precision_score, recall_score)
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+X, y = load_breast_cancer(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+model = LogisticRegression(max_iter=10000)
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+print("Accuracy :", accuracy_score(y_test, y_pred))
+print("Precision:", precision_score(y_test, y_pred))
+print("Recall   :", recall_score(y_test, y_pred))
+print("F1-score :", f1_score(y_test, y_pred))
+print("\nConfusion matrix:\n", confusion_matrix(y_test, y_pred))</pre>
+</div>
+<div class="page" id="p9">
+<p class="nav"><a href="#">Contents</a> <a href="#p8">Previous</a> <a href="#p10">Next</a></p>
+<h2>Experiment 9: K-Nearest Neighbors (KNN) Classification</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre>from sklearn.datasets import load_iris
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import StandardScaler
+
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("\nConfusion matrix:\n", confusion_matrix(y_test, y_pred))</pre>
+</div>
+<div class="page" id="p10">
+<p class="nav"><a href="#">Contents</a> <a href="#p9">Previous</a></p>
+<h2>Experiment 10: PCA and K-Means Clustering</h2>
+<button onclick="copyCode(this)">Copy</button>
+<pre>import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.datasets import load_iris
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
+X, y = load_iris(return_X_y=True)
+X_scaled = StandardScaler().fit_transform(X)
+
+# PCA to 2 dimensions
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+print("Explained variance ratio:", pca.explained_variance_ratio_)
+print("Total variance kept:", pca.explained_variance_ratio_.sum())
+
+# K-means clustering (k = 3)
+kmeans = KMeans(n_clusters=3, n_init=10, random_state=42)
+labels = kmeans.fit_predict(X_pca)
+centers = kmeans.cluster_centers_
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+axes[0].scatter(X_pca[:, 0], X_pca[:, 1], c=labels, cmap="viridis")
+axes[0].scatter(centers[:, 0], centers[:, 1], c="red", marker="X", s=200, label="Centroids")
+axes[0].set_title("K-Means Clusters (k = 3)")
+axes[0].legend()
+
+axes[1].scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap="viridis")
+axes[1].set_title("Actual Species")
+
+for ax in axes:
+    ax.set_xlabel("Principal Component 1")
+    ax.set_ylabel("Principal Component 2")
+
+plt.tight_layout()
+plt.show()</pre>
+</div>
+<script>
+function toggleTheme(){
+  var light = document.body.classList.toggle('light');
+  document.getElementById('themeBtn').textContent = light ? 'Switch to black' : 'Switch to white';
+}
+function copyCode(btn){
+  var text = btn.parentNode.querySelector('pre').textContent;
+  var done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1500); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+  } else { fallback(text, done); }
+}
+function fallback(text, done){
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  done();
+}
+</script>
+</body>
+</html>
